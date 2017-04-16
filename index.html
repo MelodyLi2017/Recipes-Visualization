@@ -4,17 +4,92 @@
     <title>Recipe Visualization</title>
     <link rel="stylesheet" href="css/stylesheet.css">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="script/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src = 'script/underscore.js'></script> 
+    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js'></script> 
+ <!--   <script src="script/script.js"></script>-->
+    <style>
+        svg {border: 1px black solid;}
+        body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
+    </style>
 </head>
 <body>
-
+    <svg width = '600' height = '600'></svg>
+    <form>
+        <input type ='text' id = 'search-box'></input>
+        <input type = 'submit' id = 'submit'></input>
+    </form>
+    <h2 id = 'ing-name'>Recipes</h2>
+    <h3 id = "recipe-list"></h3>
 </body>
 <script>
+    var data, recipe_data, slow_write;
+    var svg = d3.select("svg");
 	d3.queue()
 	//load recipe data from epicurious.com
-	.defer(d3.json, "data/full_format_recipes.json")
+	//.defer(d3.json, "data/reduced_recipes_with_units.json")
 	//load nutrition data from usda
-    .defer(d3.tsv, "data/nutrition.txt")
-    .await(function (error, file1, file2) {
-    }
+    .defer(d3.json, "data/recipe_to_nutrition.json")
+    //.defer(d3.json, "data/parsed_nutrition.json" )
+    .await(function (error, file1, file2, file3) {
+        console.log(error);
+        data = file1;
+        //data2 = file2;
+        //data3 = file3;
+        recipe_data = [];
+        // data.forEach(function(d, i){
+        //     var recipe_name = d['title'];
+        //     var recipe_ing = d['new ingredients'];
+        //     var recipe = {name: recipe_name, ing: recipe_ing};
+        //     recipe_data.push(recipe);
+        // });
+        // console.log(recipe_data);
+        var recipe_by_ing = {'apple': ['apple pie', 'apple juice', 'apple turnover', 'asian curry'], 
+                        'butter': ['apple pie', 'apple turnover'], 'curry paste': ['asian curry'], 
+                        'flour': ['apple pie', 'apple turnover'], 'carrot': ['asian curry'], 
+                        'onion': ['asian curry'], 'sugar': ['apple pie', 'apple juice', 'apple turnover']};
+        var nutrients_by_ing = {'apple': {'fat': 0.3, 'sugar': 19, 'calories': 95, 'cholesterol': 0, 'sodium': 2, 'potassium': 195, 'dietary fiber': 4.4, 'protein': 0.5},
+                            'butter': {'fat': 81, 'sugar': 0.1, 'calories': 717, 'cholesterol': 215, 'sodium': 11, 'potassium': 24, 'dietary fiber': 0, 'protein': 0.9},
+                            'curry paste': {'fat': 9, 'sugar': 0, 'calories': 141, 'cholesterol': 0, 'sodium': 0, 'potassium': 0, 'dietary fiber': 0, 'protein': 8},
+                            'flour': {'fat': 1, 'sugar': 0.3, 'calories': 364, 'cholesterol': 0, 'sodium': 2, 'potassium': 107, 'dietary fiber': 2.7, 'protein': 10},
+                            'carrot': {'fat': 0.2, 'sugar': 4.7, 'calories': 41, 'cholesterol': 0, 'sodium': 69, 'potassium': 320, 'dietary fiber': 2.8, 'protein': 0.9},
+                            'onion': {'fat': 0.1, 'sugar': 4.2, 'calories': 40, 'cholesterol': 0, 'sodium': 4, 'potassium': 146, 'dietary fiber': 1.7, 'protein': 1.1},
+                            'sugar': {'fat': 0, 'sugar': 100, 'calories': 387, 'cholesterol': 0, 'sodium': 1, 'potassium': 2, 'dietary fiber': 0, 'protein': 0}
+                             };
+        var nutrient_list = ['fat', 'sugar', 'calories', 'cholesterol', 'sodium', 'potassium', 'dietary fiber', 'protein'];
+        var nutrient_counts = [];
+        var slow_write = _.debounce( function(term){
+            var recipes = recipe_by_ing[term];
+            if (recipes!=null){
+                document.getElementById("recipe-list").innerHTML = recipes[0] + "<br>";
+                for (i = 1; i < recipes.length; i++){
+                    document.getElementById("recipe-list").innerHTML += recipes[i] + "<br>";
+                }
+            }
+            else{
+                document.getElementById("recipe-list").innerHTML = 'This entry was not found.';
+            }
+        }, 500);
+
+        //takes in a list of ingredients in recipe, each bar corresponding to an ingredient's nutrition value for a 
+        //certain nutrient is in the cllass titled the ingredients name
+        function create_graph (ing_list){
+            for (i = 0; i < nutrient_list.length; i++){
+                for (j = 0; j < ing_list.length; j++){
+                    if (nutrients_by_ing[ing_list[j]]!=null){
+                        svg.append("rect")
+                        .attr("class", ing_list[j])
+                        .attr("x", 15)
+                    }
+                }
+            }
+        }
+        //at some point, prevent enter pressing/make it call search function
+        $("input").keyup(function(){
+           var val = this.value;
+           slow_write(val);
+        });
+    });
+</script>
+<script>
 </script>
