@@ -46,7 +46,7 @@ function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
     }
 }
 
-function create_axis (scales){
+function create_axis (scales, x, y){
     //[                       Calories,      Fat,       Cholesterol,     crbs, 
     var nutrient_domains = [[0, 2000*1.2], [0, 65*1.2], [0, 300*1.2], [0, 300*1.2],
     //Fiber,       Sugar,       Protein         calc,         iron, 
@@ -59,12 +59,12 @@ function create_axis (scales){
         scale = d3.scaleLinear().domain(nutrient_domains[i]).range([0, 600]);
         scales.push(scale);
         var axis = d3.axisTop(scale);
-        var y_coord = i*100 + 50;
+        var y_coord = i*100 + y;
 
         d3.select("#text")
         .append("text")
         .text(nutrient_list[i])
-        .attr("x", 13)
+        .attr("x", x)
         .attr("y", y_coord-30);
 
         d3.select("#axes")
