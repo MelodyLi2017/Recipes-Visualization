@@ -13,6 +13,19 @@
         /*svg {border: 1px black solid;}*/
         body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
         #text {font-size: 15; font-weight: bold;}
+		
+		#personalInfo{
+			width: 300px;
+		}
+		.labels{
+			float: left;
+			margin-left: 10px;
+			margin-top: 3px;
+		}
+		.inputs{
+			float: right;
+			margin-right: 10px;
+		}
     </style>
 </head>
 <body>
@@ -27,6 +40,25 @@
     </form>
     <h2 id = 'ing-name'>Recipes</h2>
     <h3 id = "recipe-list"></h3>
+	<div id  = "personalInfo">
+		<form>
+			<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
+			<div class = "labels">
+				Gender:<br>
+				Weight(Lbs):</br>
+				Height(Inches):</br>
+				Age(Years):<br>
+			</div>
+			<div class = "inputs">
+				<input type = "radio" name = "gender" value = "0">Male 
+				<input type = "radio" name = "gender" value = "1">Female<br>
+				<input type = "number" name = "weight"><br>
+				<input type = "number" name = "height"><br>
+				<input type = "number" name = "age"><br>
+			</div>
+			<input type = "submit" value = "submit">
+		</form>
+	</div>
 </body>
 <script>
     var data, data2, scale, recipe_data, slow_write;
