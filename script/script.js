@@ -1,7 +1,7 @@
 //things to check: special equipment "ingredients" and "to blah blah blah" recipes
 //takes in recipe name
 
-function create_graph (recipe, recipe_ing, ing_nut, scales){
+function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
     //nutrition strings as in data files
     console.log(recipe_ing);
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
@@ -12,7 +12,7 @@ function create_graph (recipe, recipe_ing, ing_nut, scales){
     //at some point in time, filter out recipes with > 11 ingredients
     var ing_list = Object.keys(ing_full);
     for (var i = 0; i < nutrition_array.length; i++){
-        var agg_x = 15;
+        var agg_x = x;
         for (var j = 0; j < ing_list.length; j++){
             var ing = ing_list[j];
             var NDBNo = ing_full[ing]['NDBNo'];
@@ -34,7 +34,7 @@ function create_graph (recipe, recipe_ing, ing_nut, scales){
                 .append("rect")
                 .attr("class",ing)
                 .attr("x", agg_x)
-                .attr("y", 65+ i*100)
+                .attr("y", y+ i*100)
                 .attr("height", 30)
                 .attr("width", scales[i](amount_recipe*amount_per))
                 .attr("fill", color_scale[j])

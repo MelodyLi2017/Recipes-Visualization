@@ -87,7 +87,9 @@
         ing_nut = file2;
         var scales = [];
         create_axis(scales);
-        create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales);
+        var base_x = 15;
+        var base_y = 65;
+        create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   
         // searching the recipe section
         // $("input").keyup(function(){
