@@ -4,17 +4,144 @@
     <title>Recipe Visualization</title>
     <link rel="stylesheet" href="css/stylesheet.css">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="script/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src = 'script/underscore.js'></script> 
+    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js'></script> 
+ <!--   <script src="script/script.js"></script>-->
+    <style>
+        svg {border: 1px black solid;}
+        body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
+        #text {font-size: 15; font-weight: bold;}
+    </style>
 </head>
 <body>
-
+    <svg width = '1000' height = '1200'>
+        <g id = "axes"></g>
+        <g id= "text"></g>
+        <g id = "bars"></g>
+    </svg>
+    <form>
+        <input type ='text' id = 'search-box'></input>
+        <input type = 'submit' id = 'submit'></input>
+    </form>
+    <h2 id = 'ing-name'>Recipes</h2>
+    <h3 id = "recipe-list"></h3>
 </body>
 <script>
+    var data, scale, recipe_data, slow_write;
+    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
+    var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
+     'Protein', 'Water', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
+    var svg = d3.select("svg");
+    //[                       Calories,      Fat,       Cholesterol,     crbs, 
+    var nutrient_domains = [[0, 2000*1.2], [0, 65*1.2], [0, 300*1.2], [0, 300*1.2],
+    //Fiber,       Sugar,       Protein,    water,           calc,         iron, 
+    [0, 25*1.2], [0, 50*1.2], [0, 50*1.2], [0, 3000*1.2], [0, 1000*1.2], [0, 18*1.2],
+    //vit a, vitc]
+    [0, 5000*1.2], [0, 60*1.2]];
+    var axes = [];
+    var scales = [];
+
+    for (i = 0; i < nutrient_domains.length; i++){
+        scale = d3.scaleLinear().domain(nutrient_domains[i]).range([0, 600]);
+        scales.push(scale);
+        var axis = d3.axisTop(scale);
+        var y_coord = i*100 + 50;
+
+        d3.select("#text")
+        .append("text")
+        .text(nutrient_list[i])
+        .attr("x", 13)
+        .attr("y", y_coord-30);
+
+        d3.select("#axes")
+        .append("g")
+        .style("font-size", 11)
+        .attr("transform", "translate(15, " + y_coord + ")" )
+        .call(axis);
+    }
+
+
 	d3.queue()
 	//load recipe data from epicurious.com
-	.defer(d3.json, "data/full_format_recipes.json")
+	.defer(d3.json, "data/reduced_recipes_with_units.json")
 	//load nutrition data from usda
-    .defer(d3.tsv, "data/nutrition.txt")
-    .await(function (error, file1, file2) {
-    }
+    //.defer(d3.json, "data/recipe_to_nutrition.json")
+    .defer(d3.json, "data/nutrition_reduced.json")
+    .await(function (error, file1, file2, file3) {
+        console.log(error);
+        data = file1;
+        data2 = file2;
+        //data3 = file3;
+        recipe_data = {'apple pie': {'flour': '0.5', 'butter': '0.5', 'apple': '3'}};
+        // data.forEach(function(d, i){
+        //     var recipe_name = d['title'];
+        //     var recipe_ing = d['new ingredients'];
+        //     var recipe = {name: recipe_name, ing: recipe_ing};
+        //     recipe_data.push(recipe);
+        // });
+        // console.log(recipe_data);
+        var recipe_by_ing = {'apple': ['apple pie', 'apple juice', 'apple turnover', 'asian curry'], 
+                        'butter': ['apple pie', 'apple turnover'], 'curry paste': ['asian curry'], 
+                        'flour': ['apple pie', 'apple turnover'], 'carrot': ['asian curry'], 
+                        'onion': ['asian curry'], 'Sugar': ['apple pie', 'apple juice', 'apple turnover']};
+        var nutrients_by_ing = {'apple': {'Fat': 0.3, 'Sugar': 19, 'Calories': 95, 'Cholesterol': 0, 'Sodium': 2, 'Calcium': 195, 'Fiber': 4.4, 'Protein': 0.5},
+                            'butter': {'Fat': 81, 'Sugar': 0.1, 'Calories': 717, 'Cholesterol': 215,'Sodium': 11, 'Calcium': 24, 'Fiber': 0, 'Protein': 0.9},
+                            'curry paste': {'Fat': 9, 'Sugar': 0, 'Calories': 141, 'Cholesterol': 0, 'Sodium': 0, 'Calcium': 0, 'Fiber': 0, 'Protein': 8},
+                            'flour': {'Fat': 1, 'Sugar': 0.3, 'Calories': 364, 'Cholesterol': 0, 'Sodium': 2, 'Calcium': 107, 'Fiber': 2.7, 'Protein': 10},
+                            'carrot': {'Fat': 0.2, 'Sugar': 4.7, 'Calories': 41, 'Cholesterol': 0, 'Sodium': 69, 'Calcium': 320, 'Fiber': 2.8, 'Protein': 0.9},
+                            'onion': {'Fat': 0.1, 'Sugar': 4.2, 'Calories': 40, 'Cholesterol': 0, 'Sodium': 4, 'Calcium': 146, 'Fiber': 1.7, 'Protein': 1.1},
+                            'Sugar': {'Fat': 0, 'Sugar': 100, 'Calories': 387, 'Cholesterol': 0, 'Sodium': 1, 'Calcium': 2, 'Fiber': 0, 'Protein': 0}
+                             };
+        var nutrient_counts = [];
+        var slow_write = _.debounce( function(term){
+            var recipes = recipe_by_ing[term];
+            if (recipes!=null){
+                document.getElementById("recipe-list").innerHTML = "You searched for: " +term+"<br>"+recipes[0] + "<br>";
+                for (i = 1; i < recipes.length; i++){
+                    document.getElementById("recipe-list").innerHTML += recipes[i] + "<br>";
+                }
+                create_graph(recipe_data[recipe_by_ing[term][0]]);
+            }
+            else{
+                document.getElementById("recipe-list").innerHTML = 'This entry was not found.';
+            }
+        }, 500);
+
+        //takes in object in form of: {ing1:#, ing2:#...}
+        function create_graph (ing_obj){
+            var ing = Object.keys(ing_obj);
+            for (i = 0; i < nutrient_list.length; i++){
+                var agg_x = 15;
+                for (j = 0; j < ing.length; j++){
+                    if (nutrients_by_ing[ing[i]]!=null){
+                        var amount_per = nutrients_by_ing[ing[j]][nutrient_list[i]];
+                        var amount_recipe = ing_obj[ing[j]];
+                        d3.select("#bars")
+                        .append("rect")
+                        .attr("class",ing[j])
+                        .attr("x", agg_x)
+                        .attr("y", 65+ i*100)
+                        .attr("height", 30)
+                        .attr("width", scales[i](Number(amount_recipe)*Number(amount_per)))
+                        //do NOT forget to do the math at some point
+                        .attr("fill", color_scale[j])
+                        .attr("stroke", color_scale[j]);
+                        //we're going to have problems with recipes with more than 11 ingredients
+                        agg_x += scales[i](Number(amount_recipe)*Number(amount_per));
+                    }
+
+                }
+
+            }
+        }
+        //create_graph(['butter', 'apple', 'flour', 'sugar']);
+        //at some point, prevent enter pressing/make it call search function
+        $("input").keyup(function(){
+           var val = this.value;
+           slow_write(val);
+        });
+    });
+</script>
+<script>
 </script>
