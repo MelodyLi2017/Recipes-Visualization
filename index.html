@@ -142,6 +142,33 @@
            slow_write(val);
         });
     });
+	
+	/* Macronutrient Calculator */
+	function BMRCalculator(gender, weight, height, age){
+		//gender: 0 = male, 1 = female
+		if (gender == 1)
+			return 655.1 + (4.35 * weight) + (4.7 * height) - (4.7 * age);
+		else
+			return 66 + (6.2 * weight) + (12.7 * height) - (6.76 * age);
+	}
+	
+	function caloriesCalculator(exercise, BMR){
+		return BMR * (1.2 + exercise * 0.175);
+	}
+	
+	function macronutrientCalculator(ratio, calories){
+		//ratio = 0, body building ratio 50-30-20 (carb-protein-fat)
+		//ratio = 1, maintenance ratio 40-30-30
+		//ratio = 2, fat loss ratio 20-35-45
+		if (ratio == 0)
+			return [calories * .5 / 4, calories * .3 / 4, calories * .2 / 9];
+		else if (ratio == 1)
+			return [calories * .4 / 4, calories * .3 / 4, calories * .3 / 9];
+		else if (ratio == 2)
+			return [calories * .2 / 4, calories * .35 / 4, calories * .45 / 9];
+		else
+			return [281, 112.5, 75];
+	}
 </script>
 <script>
 </script>
