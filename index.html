@@ -66,13 +66,13 @@
 	//load recipe data from epicurious.com
 	.defer(d3.json, "data/reduced_recipes_with_units.json")
 	//load nutrition data from usda
-    //.defer(d3.json, "data/recipe_to_nutrition.json")
+    .defer(d3.json, "data/recipe_to_nutrition.json")
     .defer(d3.json, "data/nutrition_reduced.json")
     .await(function (error, file1, file2, file3) {
         console.log(error);
         data = file1;
         data2 = file2;
-        //data3 = file3;
+        data3 = file3;
         recipe_data = {'apple pie': {'flour': '0.5', 'butter': '0.5', 'apple': '3'}};
         // data.forEach(function(d, i){
         //     var recipe_name = d['title'];
@@ -107,7 +107,7 @@
                 document.getElementById("recipe-list").innerHTML = 'This entry was not found.';
             }
         }, 500);
-
+        //things to check: special equipment "ingredients" and "to blah blah blah" recipes
         //takes in object in form of: {ing1:#, ing2:#...}
         function create_graph (ing_obj){
             var ing = Object.keys(ing_obj);
