@@ -118,14 +118,14 @@
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
-    //svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
+   // svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
 	//load recipe data from epicurious.com
 	//load nutrition data from usda
     .defer(d3.json, "data/recipe_to_nutrition_final.json")
     .defer(d3.json, "data/nutrition_reduced.json")
-    .defer(d3.json, "data/reduced_recipes_with_units.json")
+    .defer(d3.json, "data/search_ingredients.json")
     .await(function (error, file1, file2, file3) {
         console.log(error);
         //{recipe: {ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}, recipe2...}
@@ -147,10 +147,10 @@
         create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   
         //searching the recipe section
-        $("input").keyup(function(){
-           var val = this.value;
-           slow_write(val);
-        });
+        // $("input").keyup(function(){
+        //    var val = this.value;
+        //    slow_write(val);
+        // });
 
          // console.log(recipe_ing);
         // var recipes = Object.keys(recipe_ing);
@@ -159,14 +159,17 @@
 
         //at some point, prevent enter pressing/make it call search function
 
-        // document.getElementById("recipe-list").innerHTML = "You searched for: stuff <br>";
-        // for (var i = 0; i < 10; i++){
-        //     document.getElementById("recipe-list").innerHTML += Object.keys(recipe_ing)[i] + "<br>";
-        //     var ing_list = Object.keys(recipe_ing[Object.keys(recipe_ing)[i]]);
-        //     for (var j = 0; j < ing_list.length; j++){
-        //         document.getElementById("recipe-list").innerHTML += ing_list[j] + "<br>";
-        //     }
-        // }
+        document.getElementById("recipe-list").innerHTML = "You searched for: stuff <br>";
+        for (var i = 0; i < 10; i++){
+            var recipe_name = Object.keys(recipe_ing)[i]
+            document.getElementById("recipe-list").innerHTML += recipe_name + "<br>";
+            var ing_list = Object.keys(recipe_ing[recipe_name]);
+            for (var j = 0; j < ing_list.length; j++){
+                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
+                console.log(ing_nut);
+                document.getElementById("recipe-list").innerHTML += ing_list[j] + "<br>" + ing_nut[NDBNo]['Shrt_Desc'];
+            }
+        }
         
     });
 	
