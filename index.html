@@ -66,51 +66,60 @@
 			-o-transition: all 1s ease-in;
 			transition: all 1s ease-in;
 		}
+		#data{
+			float: right;
+		}
+		#pot{
+			float: left;
+		}
 	</style>
 </head>
 <body>
 	<div id = "topText">
 	</div>
 	<div id = "pot">
-		<svg id = "testSvg" width = "500" height = "500">
+		<svg id = "testSvg" width = "500" height = "500" style = "border: 1px black solid">
 		</svg>
+		<form>
+			<input type ='text' id = 'search-box'></input>
+			<input type = 'submit' id = 'submit'></input>
+		</form>
 	</div>
 	<div id = "data">
 		<div id = "recipesContainer">
+			<h2 id = 'ing-name'>Recipes</h2>
+			<h3 id = "recipe-list"></h3>
 		</div>
 		<div id = "graph">
+			<svg id = "barGraph" width = '500' height = '900'>
+				<g id = "axes"></g>
+				<g id= "text"></g>
+				<g id = "bars"></g>
+			</svg>
+			
+			
+			<div id  = "personalInfo">
+				<form>
+					<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
+					<div class = "labels">
+						Gender:<br>
+						Weight(Lbs):</br>
+						Height(Inches):</br>
+						Age(Years):<br>
+					</div>
+					<div class = "inputs">
+						<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
+						<input type = "radio" name = "gender" value = "1">Female<br>
+						<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
+						<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
+						<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
+					</div>
+					<input type = "submit" value = "submit">
+				</form>
+			</div>
 		</div>
 	</div>
-    <svg id = "barGraph" width = '1000' height = '600'>
-        <g id = "axes"></g>
-        <g id= "text"></g>
-        <g id = "bars"></g>
-    </svg>
-    <form>
-        <input type ='text' id = 'search-box'></input>
-        <input type = 'submit' id = 'submit'></input>
-    </form>
-    <h2 id = 'ing-name'>Recipes</h2>
-    <h3 id = "recipe-list"></h3>
-	<div id  = "personalInfo">
-		<form>
-			<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
-			<div class = "labels">
-				Gender:<br>
-				Weight(Lbs):</br>
-				Height(Inches):</br>
-				Age(Years):<br>
-			</div>
-			<div class = "inputs">
-				<input type = "radio" name = "gender" value = "0">Male 
-				<input type = "radio" name = "gender" value = "1">Female<br>
-				<input type = "number" name = "weight"><br>
-				<input type = "number" name = "height"><br>
-				<input type = "number" name = "age"><br>
-			</div>
-			<input type = "submit" value = "submit">
-		</form>
-	</div>
+    
 </body>
 <script>
     var data, data2, scale, recipe_data, slow_write;
@@ -202,7 +211,7 @@
 			url: "icon/" + ingredient + ".svg",
 			type: "HEAD",
 			error: function(){console.log(-1);},
-			success: function(){console.log(1);}
+			success: function(){fadeIn(ingredient);}
 		});
 	}
 	
