@@ -26,10 +26,49 @@
 			float: right;
 			margin-right: 10px;
 		}
-    </style>
+		@-webkit-keyframes fadeIn {
+		  from { opacity: 0; } 
+		  to { opacity: 1; }
+		}
+		@-moz-keyframes fadeIn {
+		  from { opacity: 0; }
+		  to { opacity: 1; }
+		}
+		@keyframes fadeIn { 
+		  from { opacity: 0; } 
+		  to { opacity: 1; }
+		}
+		.icon {
+			opacity: 0;
+			-webkit-animation: fadeIn ease-in 1; 
+			-moz-animation: fadeIn ease-in 1; 
+			animation: fadeIn ease-in 1; 
+			-webkit-animation-fill-mode: forwards;
+			-moz-animation-fill-mode: forwards;
+			animation-fill-mode: forwards;
+			-webkit-animation-duration: 0.5s;
+			-moz-animation-duration: 0.5s;
+			animation-duration: 0.5s;
+			-webkit-animation-delay: 0.7s; 
+			-moz-animation-delay: 0.7s; 
+			animation-delay: 0.7s; 
+		}
+	</style>
 </head>
 <body>
-    <svg width = '2000' height = '1200'>
+	<div id = "topText">
+	</div>
+	<div id = "pot">
+		<svg id = "test" width = "500" height = "500">
+		</svg>
+	</div>
+	<div id = "data">
+		<div id = "recipesContainer">
+		</div>
+		<div id = "graph">
+		</div>
+	</div>
+    <svg id = "barGraph" width = '1000' height = '600'>
         <g id = "axes"></g>
         <g id= "text"></g>
         <g id = "bars"></g>
@@ -65,8 +104,8 @@
     var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
-    var svg = d3.select("svg");
-    svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
+    var svg = d3.select("#barGraph");
+    //svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
 	//load recipe data from epicurious.com
@@ -142,6 +181,27 @@
 			return [calories * .2 / 4, calories * .35 / 4, calories * .45 / 9];
 		else
 			return [281, 112.5, 75];
+	}
+	
+	/* Animation/Interface Functions */
+	function getIcon(ingredient){
+		$.ajax({
+			url: "icon/" + ingredient + ".svg",
+			type: "HEAD",
+			error: function(){console.log(-1);},
+			success: function(){console.log(1);}
+		});
+	}
+	
+	function fadeIn(element){
+		svg = d3.select("#test");
+		svg.append("image")
+				.attr("x", Math.random() * 400 + 50)
+				.attr("y", 0)
+				.attr("height", 50)
+				.attr("width", 50)
+				.attr("class", "icon")
+				.attr("xlink:href", "./icon/" + element + ".svg");
 	}
 </script>
 <script>
