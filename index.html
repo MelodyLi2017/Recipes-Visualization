@@ -27,31 +27,44 @@
 			margin-right: 10px;
 		}
 		@-webkit-keyframes fadeIn {
-		  from { opacity: 0; } 
-		  to { opacity: 1; }
+		  from { opacity: 0; transform: translate(0px, 0px);} 
+		  to { opacity: 1; transform: translate(0px, 400px);}}
 		}
 		@-moz-keyframes fadeIn {
-		  from { opacity: 0; }
-		  to { opacity: 1; }
+		  from { opacity: 0; transform: translate(0px, 0px);} 
+		  to { opacity: 1; transform: translate(0px, 400px);}}
 		}
 		@keyframes fadeIn { 
-		  from { opacity: 0; } 
-		  to { opacity: 1; }
+		  from { opacity: 0; transform: translate(0px, 0px);} 
+		  to { opacity: 1; transform: translate(0px, 400px);}}
 		}
-		.icon {
-			opacity: 0;
+		@-webkit-keyframes moveDown {
+		  from { transform: translate(0px, 0px);} 
+		  to { transform: translate(0px, 400px);}
+		}
+		@-moz-keyframes moveDown {
+		  from { transform: translate(0px, 0px);} 
+		  to { transform: translate(0px, 400px);}
+		}
+		@keyframes moveDown { 
+		  from { transform: translate(0px, 0px);} 
+		  to { transform: translate(0px, 400px);}
+		}
+		.fade {
+			opacity: 0;transform: translate(0px, 0px);
 			-webkit-animation: fadeIn ease-in 1; 
 			-moz-animation: fadeIn ease-in 1; 
 			animation: fadeIn ease-in 1; 
 			-webkit-animation-fill-mode: forwards;
 			-moz-animation-fill-mode: forwards;
 			animation-fill-mode: forwards;
-			-webkit-animation-duration: 0.5s;
-			-moz-animation-duration: 0.5s;
-			animation-duration: 0.5s;
-			-webkit-animation-delay: 0.7s; 
-			-moz-animation-delay: 0.7s; 
-			animation-delay: 0.7s; 
+			-webkit-animation-duration: 1s;
+			-moz-animation-duration: 1s;
+			animation-duration: 1s;
+			-webkit-transition: all 1s ease-in;
+			-moz-transition: all 1s ease-in;
+			-o-transition: all 1s ease-in;
+			transition: all 1s ease-in;
 		}
 	</style>
 </head>
@@ -59,7 +72,7 @@
 	<div id = "topText">
 	</div>
 	<div id = "pot">
-		<svg id = "test" width = "500" height = "500">
+		<svg id = "testSvg" width = "500" height = "500">
 		</svg>
 	</div>
 	<div id = "data">
@@ -194,13 +207,14 @@
 	}
 	
 	function fadeIn(element){
-		svg = d3.select("#test");
+		svg = d3.select("#testSvg");
 		svg.append("image")
 				.attr("x", Math.random() * 400 + 50)
 				.attr("y", 0)
 				.attr("height", 50)
 				.attr("width", 50)
-				.attr("class", "icon")
+				.attr("class", "fade fall")
+				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
 	}
 </script>
