@@ -1,6 +1,8 @@
 //things to check: special equipment "ingredients" and "to blah blah blah" recipes
 //takes in recipe name
-
+//do the per serving thing (most of the recipes have calories), filter out recipes that don't have a calorie count
+//figure out why some recipes don't work
+//get information for nicole
 function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
     //nutrition strings as in data files
     console.log(recipe_ing);
@@ -16,9 +18,9 @@ function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
         for (var j = 0; j < ing_list.length; j++){
             var ing = ing_list[j];
             var NDBNo = ing_full[ing]['NDBNo'];
-            if (i == 0){
-                //console.log(ing);
-            }
+            // if (i == 0){
+            //     console.log(ing);
+            // }
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
                 //console.log(ing_nut[NDBNo]['Shrt_Desc']);
