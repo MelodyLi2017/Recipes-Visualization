@@ -171,12 +171,13 @@
         document.getElementById("recipe-list").innerHTML = "You searched for: stuff <br>";
         for (var i = 0; i < 10; i++){
             var recipe_name = Object.keys(recipe_ing)[i]
-            document.getElementById("recipe-list").innerHTML += recipe_name + "<br>";
+            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name);
             var ing_list = Object.keys(recipe_ing[recipe_name]);
             for (var j = 0; j < ing_list.length; j++){
                 var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-                console.log(ing_nut);
-                document.getElementById("recipe-list").innerHTML += ing_list[j] + "<br>" + ing_nut[NDBNo]['Shrt_Desc'];
+                // console.log(ing_nut);
+                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
             }
         }
         
