@@ -9,6 +9,7 @@
     <script src = 'script/script.js'></script>
     <script src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js'></script> 
     <script src="script/search.js"></script>
+	<link rel = "stylesheet" href = "css/animation.css">
     <style>
         /*svg {border: 1px black solid;}*/
         body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
@@ -26,59 +27,27 @@
 			float: right;
 			margin-right: 10px;
 		}
-		@-webkit-keyframes fadeIn {
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@-moz-keyframes fadeIn {
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@keyframes fadeIn { 
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@-webkit-keyframes moveDown {
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		@-moz-keyframes moveDown {
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		@keyframes moveDown { 
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		.fade {
-			opacity: 0;transform: translate(0px, 0px);
-			-webkit-animation: fadeIn ease-in 1; 
-			-moz-animation: fadeIn ease-in 1; 
-			animation: fadeIn ease-in 1; 
-			-webkit-animation-fill-mode: forwards;
-			-moz-animation-fill-mode: forwards;
-			animation-fill-mode: forwards;
-			-webkit-animation-duration: 1s;
-			-moz-animation-duration: 1s;
-			animation-duration: 1s;
-			-webkit-transition: all 1s ease-in;
-			-moz-transition: all 1s ease-in;
-			-o-transition: all 1s ease-in;
-			transition: all 1s ease-in;
-		}
 		#data{
 			float: right;
 		}
 		#pot{
 			float: left;
 		}
+		.ingredients{
+			position: fixed;
+			top: 100px;
+			right: 100px;
+		}
 	</style>
 </head>
 <body>
 	<div id = "topText">
+		<h1>What to eat?</h1>
+		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
 	</div>
 	<div id = "pot">
 		<svg id = "testSvg" width = "500" height = "500" style = "border: 1px black solid">
+			<image y = "270" width = "500" xlink:href = "icon/pot.svg"></image>
 		</svg>
 		<form>
 			<input type ='text' id = 'search-box'></input>
@@ -91,7 +60,7 @@
 			<h3 id = "recipe-list"></h3>
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '600' height = '900'>
+			<svg id = "barGraph" width = '700' height = '300'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -122,10 +91,11 @@
 </body>
 <script>
     var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
-    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
+    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','black','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
+	var instructionsActive = false;
    // svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
@@ -159,7 +129,6 @@
         //console.log(recipe_search_list);
         ing_nut = file2;
         var scales = [];
-        create_axis(scales);
 
         //at some point, prevent enter pressing/make it call search function
 
@@ -170,6 +139,7 @@
 	        var val = this.value;
 	        slow_write(val);
         });
+
         var slow_write = _.debounce( function(term){
 		    fuse.search(term);
 			var results = fuse.results;
@@ -178,7 +148,7 @@
 	        for (var i = 0; i < 10; i++){
 	            var recipe_name = results[i]['item'];
 	            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name);
+	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
 	            var ing_list = Object.keys(recipe_ing[recipe_name]);
 	            for (var j = 0; j < ing_list.length; j++){
 	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
@@ -187,7 +157,14 @@
         	}
 		}, 500);
 
-		create_graph('4-3-2-1 Spice Rub ', recipe_ing, ing_nut, scales, recipe_cal);
+        var axis_x = 12;
+        var axis_y = 63;
+        var base_x = 15;
+        var base_y = 65;
+        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
+        create_axis(scales, axis_x, axis_y, domain);
+		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
+  
     });
 	
 	/* Macronutrient Calculator */
@@ -238,5 +215,15 @@
 				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
 	}
-
+	
+	function toggleInstruction(element){
+		if (d3.select(element).style("display") == "none" && !instructionsActive){
+			d3.select(element).style("display", "block");
+			instructionsActive = true;
+		}
+		else {
+			d3.select(element).style("display", "none");
+			instructionsActive = false;
+		}
+	}
 </script>
