@@ -134,42 +134,56 @@
 
         var options = {keys:['ingredients'], id: 'title'};
 		var fuse = new Fuse (recipe_search_list, options);
-
+		var searched = 0
         $("#search-box").keyup(function(){
 	        var val = this.value;
-	        slow_write(val);
+			slow_write(val, searched);
         });
-
+		
 		var domain;
-        var slow_write = _.debounce( function(term){
+        var slow_write = _.debounce( function(term, searched){
 		    fuse.search(term);
 			var results = fuse.results;
 
 	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
 	        for (var i = 0; i < 10; i++){
 	            var recipe_name = results[i]['item'];
-	            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
-				d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").style("display", "none");
-	            var ing_list = Object.keys(recipe_ing[recipe_name]);
+	            if (searched == 0){
+	            	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+		            d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+		        }
+		        else{
+		        	document.getElementById("recipe-name"+i).innerHTML = recipe_name;
+		        }
+		        var ing_list = Object.keys(recipe_ing[recipe_name]);
 	            for (var j = 0; j < ing_list.length; j++){
 	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-	                d3.select("#recipe-name-box"+i + " .ingredients").append("p").attr("class", "ingredients").text(ing_list[j]);
+	                if (searched == 0){
+	                	 d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients"+j).text(ing_list[j]);
+	                }
+	                else{
+	                	d3.select(".ingredients"+j).text(ing_list[j]);
+	                }
 	            }
         	}
+//<<<<<<< HEAD
 			domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
+			console.log(domain);
 			create_axis(scales, axis_x, axis_y, domain);
 			create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
 			getIcon(term);
+//=======
+        	searched = 1;
+//>>>>>>> d057acb0afe42efeccc26a1814c15d953a2f454a
 		}, 500);
 
         var axis_x = 12;
         var axis_y = 63;
         var base_x = 15;
         var base_y = 65;
-        domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
+        var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
         create_axis(scales, axis_x, axis_y, domain);
-		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
+		create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
   
     });
 	
