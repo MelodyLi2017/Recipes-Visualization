@@ -3,7 +3,7 @@
 //do the per serving thing (most of the recipes have calories), filter out recipes that don't have a calorie count
 //figure out why some recipes don't work
 //get information for nicole
-function create_graph (recipe, recipe_ing, ing_nut, scales, recipe_cal){
+function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
     //nutrition strings as in data files
     console.log(recipe_ing);
     //var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
@@ -69,7 +69,7 @@ function create_graph (recipe, recipe_ing, ing_nut, scales, recipe_cal){
     }
 }
 
-function create_axis (scales){
+function create_axis (scales, x, y, domain){
     //[                       Calories,      Fat,       Cholesterol,     crbs, 
     /*var nutrient_domains = [[0, 2000*1.2], [0, 65*1.2], [0, 300*1.2], [0, 300*1.2],
     //Fiber,       Sugar,       Protein         calc,         iron, 
@@ -154,4 +154,4 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
     }
 	return max;
 }
->>>>>>> bcff75c75975ed1e805e07e8b0cdf8b447639aa4
+//>>>>>>> bcff75c75975ed1e805e07e8b0cdf8b447639aa4
