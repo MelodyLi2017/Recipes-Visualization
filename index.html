@@ -94,7 +94,7 @@
 			<h3 id = "recipe-list"></h3>
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '700' height = '900'>
+			<svg id = "barGraph" width = '700' height = '300'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -155,7 +155,7 @@
         var axis_y = 63;
         var base_x = 15;
         var base_y = 65;
-        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut);
+        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
         create_axis(scales, axis_x, axis_y, domain);
 		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   

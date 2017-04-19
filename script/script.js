@@ -114,10 +114,10 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
                 agg_x += (Number(amount_recipe)*Number(amount_per));
             }
         }
-		if (agg_x > recommend)
+		if (agg_x > recommend[i])
 			max.push(agg_x);
 		else
-			max.push(recommend)
+			max.push(recommend[i])
     }
 	return max;
 }
