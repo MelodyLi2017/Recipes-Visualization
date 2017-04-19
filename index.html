@@ -34,15 +34,20 @@
 			float: left;
 		}
 		.ingredients{
-			float: right;
+			position: fixed;
+			top: 100px;
+			right: 100px;
 		}
 	</style>
 </head>
 <body>
 	<div id = "topText">
+		<h1>What to eat?</h1>
+		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
 	</div>
 	<div id = "pot">
 		<svg id = "testSvg" width = "500" height = "500" style = "border: 1px black solid">
+			<image y = "270" width = "500" xlink:href = "icon/pot.svg"></image>
 		</svg>
 		<form>
 			<input type ='text' id = 'search-box'></input>
@@ -122,15 +127,15 @@
 		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   
         //searching the recipe section
-        // $("input").keyup(function(){
-        //    var val = this.value;
-        //    slow_write(val);
-        // });
+        $("input").keyup(function(){
+            var val = this.value;
+            slow_write(val);
+        });
 
-         // console.log(recipe_ing);
-        // var recipes = Object.keys(recipe_ing);
-        // var random_recipe = recipes[Math.round(Math.random()*6791)];
-        // console.log(random_recipe);
+        console.log(recipe_ing);
+        var recipes = Object.keys(recipe_ing);
+        var random_recipe = recipes[Math.round(Math.random()*6791)];
+        console.log(random_recipe);
 
         //at some point, prevent enter pressing/make it call search function
 
