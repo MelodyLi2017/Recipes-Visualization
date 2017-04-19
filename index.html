@@ -144,7 +144,9 @@
             console.log("Wrong");
             document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
-			var results = slow_write(val);
+            else{
+			 var results = slow_write(val);
+            }
         });
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
