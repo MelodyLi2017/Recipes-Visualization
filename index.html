@@ -92,7 +92,8 @@
 </body>
 <script>
     var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
-    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','black','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
+    var color_scale = ['#252525', '#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
+
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
@@ -143,40 +144,52 @@
         });
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i)//.attr("onclick", "toggleInstruction('#recipe-name-box"+i" .ingredients')");	
+        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");	
         	for (var j = 0; j <10; j++){
         		d3.select("#recipe-name-box"+i).append("p").attr("id", "ingredients"+j).attr("class", "ingredients");
         	}
         }
 
         var slow_write = _.debounce( function(term){
-        	search_count += 1;
-		    fuse.search(term);
-			var results = fuse.results;
+        	if (term.trim()==''){
+        		document.getElementById("recipe-list").innerHTML = "You searched for:  <br>";
+        		for (var i = 0; i < 10; i++){
+			        document.getElementById("recipe-name"+i).innerHTML = '';
+		            for (var j = 0; j < 10; j++){
+		               	d3.select("#ingredients"+j).text('');
+		            }
+	        	}
+	        	search_count = 0;
+	        	d3.selectAll("rect").remove();
+	        	d3.selectAll(".axis").remove();
+	        	d3.selectAll("text").remove();
+	       	}
+        	else{
+	        	search_count += 1;
+			    fuse.search(term);
+				var results = fuse.results;
+				results.forEach(function(d, i){
+					
+				})
 
-	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
-	        for (var i = 0; i < 10; i++){
-	            var recipe_name = results[i]['item'];
-		        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
-		        var ing_list = Object.keys(recipe_ing[recipe_name]);
-	            for (var j = 0; j < 10; j++){
-	               	d3.select("#ingredients"+j).text(ing_list[j]);
-	            }
-        	}
-	       	var axis_x = 12;
-	        var axis_y = 63;
-	        var base_x = 15;
-	        var base_y = 65;
-	        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
-	       	console.log(search_count)
-	        if (search_count == 1){
-	        	create_axis(scales, axis_x, axis_y/*,  /*domain*/);
-	        	console.log(results[0]['item']);
-				create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales, base_x, base_y);
-	        }
-	        else{
-	        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales, base_x, base_y);
-	        }
+		        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
+		        for (var i = 0; i < 10; i++){
+		            var recipe_name = results[i]['item'];
+			        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
+			        var ing_list = Object.keys(recipe_ing[recipe_name]);
+		            for (var j = 0; j < 10; j++){
+		               	d3.select("#ingredients"+j).text(ing_list[j]);
+		            }
+	        	}
+		        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
+		        if (search_count == 1){
+		        	create_axis(scales/*,  /*domain*/);
+					create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+		        }
+		        else{
+		        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+		        }
+		    }
 	        
 		}, 500);
   
