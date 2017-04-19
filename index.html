@@ -61,7 +61,7 @@
 
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '700' height = '300'>
+			<svg id = "barGraph" width = '700' height = '900'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -97,6 +97,7 @@
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
 	var instructionsActive = false;
+	var search_count = 0;
    // svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
@@ -149,6 +150,7 @@
         }
 
         var slow_write = _.debounce( function(term){
+        	search_count += 1;
 		    fuse.search(term);
 			var results = fuse.results;
 
@@ -165,9 +167,17 @@
 	        var axis_y = 63;
 	        var base_x = 15;
 	        var base_y = 65;
-	        var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
-	        create_axis(scales, axis_x, axis_y, domain);
-			create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
+	        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
+	       	console.log(search_count)
+	        if (search_count == 1){
+	        	create_axis(scales, axis_x, axis_y/*,  /*domain*/);
+	        	console.log(results[0]['item']);
+				create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales, base_x, base_y);
+	        }
+	        else{
+	        	update_graph(results[0]['items'], recipe_ing, recipe_cal, ing_nut, scales, base_x, base_y);
+	        }
+	        
 		}, 500);
   
     });
