@@ -144,8 +144,8 @@
             if(!val.match("^[a-zA-Z0-9]*$")){
             document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
-            else
-			 var results = slow_write(val);
+            else{
+				var results = slow_write(val);
             }
         });
         for (var i = 0; i < 10; i++){
