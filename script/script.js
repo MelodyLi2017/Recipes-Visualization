@@ -29,13 +29,12 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
                 console.log(calories);
                 console.log("amount of " + nutrient_list[i]+" per 100 gram: " + amount_per);
-                if (ing_full[ing]['unit']!='gram'){
+                if (ing_full[ing]['unit']=="NA"){
                     var amount_recipe = ing_full[ing]['magnitude'];
                 }
                 else{
                      var amount_recipe = Number(ing_full[ing]['magnitude'])/100;
                 }
-                var amount_recipe = Number(ing_full[ing]['magnitude'])/100;
                 if (i == 0){
                     var tot_nutrients = Number(calories)/ing_list.length;
                     var color = "#8E8B99";
@@ -43,6 +42,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*Number(ratio);
                     var color = color_scale[j];
+                    console.log(ratio);
                 }
                 console.log(ing + ": amount of " +" grams: " + amount_recipe);
                 console.log("total nutrients per serving: " + tot_nutrients);
@@ -78,8 +78,8 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y){
 }
 
 function update_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y){
-    d3.select("#bars").remove();
-    create_graph(recipe, recipe_ing, ing_nut, scales, x, y);
+    d3.selectAll("rect").remove();
+    create_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y);
 }
 
 function findMax(recipe, recipe_ing, ing_nut, recommend){
@@ -121,4 +121,47 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
 			max.push(recommend[i])
     }
 	return max;
+}
+
+function create_axis (scales, x, y){
+// function create_axis (scales, x, y, domain){
+    //[                       Calories,      Fat,       Cholesterol,     crbs, 
+    var nutrient_domains = [[0, 2000*1.2], [0, 65*1.2], [0, 300*1.2], [0, 300*1.2],
+    //Fiber,       Sugar,       Protein         calc,         iron, 
+    [0, 25*1.3], [0, 50*1.3], [0, 50*1.3], [0, 1000*1.3], [0, 18*1.3],
+    //vit a, vitc]
+    // [0, 5000*1.3], [0, 60*1.3]];
+    // var axes = [];
+    // for (var k = 0; k < nutrient_domains.length; k++){
+    //     scale = d3.scaleLinear().domain(nutrient_domains[k]).range([0, 500]);
+    //     scales.push(scale);
+    //     var axis = d3.axisTop(scale);
+    //     var y_coord = k*100 + 50;
+    //     d3.select("#text")
+    //     .append("text")
+    //     .text(nutrient_list[k])
+    //     .attr("x", 13)
+    //     .attr("y", y_coord-30);
+    [0, 5000*1.2], [0, 60*1.2]];
+    // var nutrient_domains = [[0, domain[0]], [0, domain[1]], [0, domain[2]], [0, domain[3]]];
+    var axes = [];
+
+    for (i = 0; i < nutrient_domains.length; i++){
+        scale = d3.scaleLinear().domain(nutrient_domains[i]).range([0, 550]);
+        scales.push(scale);
+        var axis = d3.axisTop(scale);
+        var y_coord = i*60 + y;
+
+        d3.select("#text")
+        .append("text")
+        .text(nutrient_list[i])
+        .attr("x", x)
+        .attr("y", y_coord + 15);
+
+        d3.select("#axes")
+        .append("g")
+        .style("font-size", 11)
+        .attr("transform", "translate(115, " + y_coord + ")" )
+        .call(axis);
+    }
 }
