@@ -140,6 +140,7 @@
 	        slow_write(val);
         });
 
+		var domain;
         var slow_write = _.debounce( function(term){
 		    fuse.search(term);
 			var results = fuse.results;
@@ -149,19 +150,23 @@
 	            var recipe_name = results[i]['item'];
 	            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
 	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+				d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").style("display", "none");
 	            var ing_list = Object.keys(recipe_ing[recipe_name]);
 	            for (var j = 0; j < ing_list.length; j++){
 	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-	                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+	                d3.select("#recipe-name-box"+i + " .ingredients").append("p").attr("class", "ingredients").text(ing_list[j]);
 	            }
         	}
+			domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
+			create_axis(scales, axis_x, axis_y, domain);
+			create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
 		}, 500);
 
         var axis_x = 12;
         var axis_y = 63;
         var base_x = 15;
         var base_y = 65;
-        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
+        domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
         create_axis(scales, axis_x, axis_y, domain);
 		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   
