@@ -9,6 +9,7 @@
     <script src = 'script/script.js'></script>
     <script src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js'></script> 
     <script src="script/search.js"></script>
+	<link rel = "stylesheet" href = "css/animation.css">
     <style>
         /*svg {border: 1px black solid;}*/
         body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
@@ -25,46 +26,6 @@
 		.inputs{
 			float: right;
 			margin-right: 10px;
-		}
-		@-webkit-keyframes fadeIn {
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@-moz-keyframes fadeIn {
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@keyframes fadeIn { 
-		  from { opacity: 0; transform: translate(0px, 0px);} 
-		  to { opacity: 1; transform: translate(0px, 400px);}}
-		}
-		@-webkit-keyframes moveDown {
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		@-moz-keyframes moveDown {
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		@keyframes moveDown { 
-		  from { transform: translate(0px, 0px);} 
-		  to { transform: translate(0px, 400px);}
-		}
-		.fade {
-			opacity: 0;transform: translate(0px, 0px);
-			-webkit-animation: fadeIn ease-in 1; 
-			-moz-animation: fadeIn ease-in 1; 
-			animation: fadeIn ease-in 1; 
-			-webkit-animation-fill-mode: forwards;
-			-moz-animation-fill-mode: forwards;
-			animation-fill-mode: forwards;
-			-webkit-animation-duration: 1s;
-			-moz-animation-duration: 1s;
-			animation-duration: 1s;
-			-webkit-transition: all 1s ease-in;
-			-moz-transition: all 1s ease-in;
-			-o-transition: all 1s ease-in;
-			transition: all 1s ease-in;
 		}
 		#data{
 			float: right;
@@ -130,6 +91,7 @@
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
+	var instructionsActive = false;
    // svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
@@ -238,10 +200,14 @@
 	}
 	
 	function toggleInstruction(element){
-		if (d3.select(element).style("display") == "block")
-			d3.select(element).style("display", "none");
-		else
+		if (d3.select(element).style("display") == "none" && !instructionsActive){
 			d3.select(element).style("display", "block");
+			instructionsActive = true;
+		}
+		else {
+			d3.select(element).style("display", "none");
+			instructionsActive = false;
+		}
 	}
 </script>
 <script>
