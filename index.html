@@ -53,6 +53,7 @@
 			<input type ='text' id = 'search-box'></input>
 			<input type = 'submit' id = 'submit'></input>
 		</form>
+<div id = "error"><p id = "errorMessage"></p></div>
 	</div>
 	<div id = "data">
 		<div id = "recipesContainer">
@@ -140,6 +141,10 @@
 
         $("#search-box").keyup(function(){
 	        var val = this.value;
+            if(!val.match("^[a-zA-Z0-9]*$")){
+            console.log("Wrong");
+            document.getElementById("errorMessage").innerHTML = "Please re-type.";
+            }
 			var results = slow_write(val);
         });
         for (var i = 0; i < 10; i++){
