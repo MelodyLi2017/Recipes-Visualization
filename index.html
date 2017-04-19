@@ -72,6 +72,9 @@
 		#pot{
 			float: left;
 		}
+		.ingredients{
+			float: right;
+		}
 	</style>
 </head>
 <body>
@@ -91,7 +94,7 @@
 			<h3 id = "recipe-list"></h3>
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '500' height = '900'>
+			<svg id = "barGraph" width = '700' height = '900'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -123,7 +126,7 @@
 </body>
 <script>
     var data, data2, scale, recipe_data, slow_write;
-    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
+    var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','black','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
@@ -148,12 +151,13 @@
         ing_nut = file2;
         ing_rec = file3;
         var scales = [];
-        var axis_x = 13;
-        var axis_y = 50;
-        create_axis(scales, axis_x, axis_y);
+        var axis_x = 12;
+        var axis_y = 63;
         var base_x = 15;
         var base_y = 65;
-        create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
+        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut);
+        create_axis(scales, axis_x, axis_y, domain);
+		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
   
         //searching the recipe section
         // $("input").keyup(function(){
@@ -172,12 +176,13 @@
         for (var i = 0; i < 10; i++){
             var recipe_name = Object.keys(recipe_ing)[i]
             d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name);
+            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+			d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").style("display", "none");
             var ing_list = Object.keys(recipe_ing[recipe_name]);
             for (var j = 0; j < ing_list.length; j++){
                 var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
                 // console.log(ing_nut);
-                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+                d3.select("#recipe-name-box"+i + " .ingredients").append("p").text(ing_list[j]);
             }
         }
         
@@ -230,6 +235,13 @@
 				.attr("class", "fade fall")
 				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
+	}
+	
+	function toggleInstruction(element){
+		if (d3.select(element).style("display") == "block")
+			d3.select(element).style("display", "none");
+		else
+			d3.select(element).style("display", "block");
 	}
 </script>
 <script>
