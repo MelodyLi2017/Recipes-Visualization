@@ -39,7 +39,7 @@ function create_graph (recipe, recipe_ing, ing_nut, scales, x, y){
                     var tot_nutrients = Number(calories)/ing_list.length;
                 }
                 else{
-                    var tot_nutrients = amount_recipe*amount_per//*ratio;
+                    var tot_nutrients = amount_recipe*amount_per*ratio;
                 }
                 // console.log(ing);
                 // console.log(tot_nutrients);

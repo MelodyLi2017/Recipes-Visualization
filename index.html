@@ -134,37 +134,38 @@
 
         var options = {keys:['ingredients'], id: 'title'};
 		var fuse = new Fuse (recipe_search_list, options);
-
+		var searched = 0
         $("#search-box").keyup(function(){
 	        var val = this.value;
-	        slow_write(val);
+			slow_write(val, searched);
         });
 
-        var slow_write = _.debounce( function(term){
+        var slow_write = _.debounce( function(term, searched){
 		    fuse.search(term);
 			var results = fuse.results;
 
 	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
 	        for (var i = 0; i < 10; i++){
 	            var recipe_name = results[i]['item'];
-	            if (d3.select("#recipe-name-box"+i)==null){
+	            if (searched == 0){
 	            	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-		            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name"+i).text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
-		            var ing_list = Object.keys(recipe_ing[recipe_name]);
-		            for (var j = 0; j < ing_list.length; j++){
-		                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-		                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
-		            }
-	            }
-	            else{
-		            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
-		            var ing_list = Object.keys(recipe_ing[recipe_name]);
-		            for (var j = 0; j < ing_list.length; j++){
-		                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-		                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
-		            }
+		            d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+		        }
+		        else{
+		        	document.getElementById("recipe-name"+i).innerHTML = recipe_name;
+		        }
+		        var ing_list = Object.keys(recipe_ing[recipe_name]);
+	            for (var j = 0; j < ing_list.length; j++){
+	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
+	                if (searched == 0){
+	                	 d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients"+j).text(ing_list[j]);
+	                }
+	                else{
+	                	d3.select(".ingredients"+j).text(ing_list[j]);
+	                }
 	            }
         	}
+        	searched = 1;
 		}, 500);
 
         var axis_x = 12;
