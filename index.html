@@ -58,6 +58,7 @@
 		<div id = "recipesContainer">
 			<h2 id = 'ing-name'>Recipes</h2>
 			<h3 id = "recipe-list"></h3>
+
 		</div>
 		<div id = "graph">
 			<svg id = "barGraph" width = '700' height = '300'>
@@ -134,47 +135,41 @@
 
         var options = {keys:['ingredients'], id: 'title'};
 		var fuse = new Fuse (recipe_search_list, options);
-		var searched = 0
+
         $("#search-box").keyup(function(){
 	        var val = this.value;
-			slow_write(val, searched);
+			var results = slow_write(val);
         });
 
-        var slow_write = _.debounce( function(term, searched){
+        for (var i = 0; i < 10; i++){
+        	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i)//.attr("onclick", "toggleInstruction('#recipe-name-box"+i" .ingredients')");	
+        	for (var j = 0; j <10; j++){
+        		d3.select("#recipe-name-box"+i).append("p").attr("id", "ingredients"+j).attr("class", "ingredients");
+        	}
+        }
+
+        var slow_write = _.debounce( function(term){
 		    fuse.search(term);
 			var results = fuse.results;
 
 	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
 	        for (var i = 0; i < 10; i++){
 	            var recipe_name = results[i]['item'];
-	            if (searched == 0){
-	            	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-		            d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
-		        }
-		        else{
-		        	document.getElementById("recipe-name"+i).innerHTML = recipe_name;
-		        }
+		        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
 		        var ing_list = Object.keys(recipe_ing[recipe_name]);
-	            for (var j = 0; j < ing_list.length; j++){
-	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-	                if (searched == 0){
-	                	 d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients"+j).text(ing_list[j]);
-	                }
-	                else{
-	                	d3.select(".ingredients"+j).text(ing_list[j]);
-	                }
+	            for (var j = 0; j < 10; j++){
+	               	d3.select("#ingredients"+j).text(ing_list[j]);
 	            }
         	}
-        	searched = 1;
+	       	var axis_x = 12;
+	        var axis_y = 63;
+	        var base_x = 15;
+	        var base_y = 65;
+	        var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
+	        create_axis(scales, axis_x, axis_y, domain);
+			create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
 		}, 500);
-
-        var axis_x = 12;
-        var axis_y = 63;
-        var base_x = 15;
-        var base_y = 65;
-        var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
-        create_axis(scales, axis_x, axis_y, domain);
-		create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
   
     });
 	
