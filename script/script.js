@@ -154,4 +154,3 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
     }
 	return max;
 }
->>>>>>> bcff75c75975ed1e805e07e8b0cdf8b447639aa4

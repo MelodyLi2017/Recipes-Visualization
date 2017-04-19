@@ -147,12 +147,22 @@
 	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
 	        for (var i = 0; i < 10; i++){
 	            var recipe_name = results[i]['item'];
-	            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
-	            var ing_list = Object.keys(recipe_ing[recipe_name]);
-	            for (var j = 0; j < ing_list.length; j++){
-	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-	                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+	            if (d3.select("#recipe-name-box"+i)==null){
+	            	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+		            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name"+i).text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+		            var ing_list = Object.keys(recipe_ing[recipe_name]);
+		            for (var j = 0; j < ing_list.length; j++){
+		                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
+		                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+		            }
+	            }
+	            else{
+		            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");
+		            var ing_list = Object.keys(recipe_ing[recipe_name]);
+		            for (var j = 0; j < ing_list.length; j++){
+		                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
+		                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+		            }
 	            }
         	}
 		}, 500);
