@@ -172,9 +172,9 @@
         var axis_y = 63;
         var base_x = 15;
         var base_y = 65;
-        var domain = findMax('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, [2500, 30, 81, 160]);
+        var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);
         create_axis(scales, axis_x, axis_y, domain);
-		create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
+		create_graph(results[0]['item'], recipe_ing, ing_nut, scales, base_x, base_y);
   
     });
 	
