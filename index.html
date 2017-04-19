@@ -116,7 +116,7 @@
         recipe_search_list = [];
         var removed_recipes = {};
         for (var i = 0; i < file3.length; i++){
-        	if (file3[i]['calories'] != null){
+        	if (file3[i]['calories'] != null && file3[i]['title'].indexOf("'")==-1){
             	recipe_cal[file3[i]['title']] = file3[i]['calories'];
             }
             else{
@@ -142,10 +142,11 @@
         $("#search-box").keyup(function(){
 	        var val = this.value;
             if(!val.match("^[a-zA-Z0-9]*$")){
-            console.log("Wrong");
             document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
-			var results = slow_write(val);
+            else{
+				var results = slow_write(val);
+            }
         });
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
