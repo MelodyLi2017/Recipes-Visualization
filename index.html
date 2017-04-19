@@ -91,7 +91,7 @@
 			<h3 id = "recipe-list"></h3>
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '500' height = '900'>
+			<svg id = "barGraph" width = '600' height = '900'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -118,11 +118,10 @@
 				</form>
 			</div>
 		</div>
-	</div>
-    
+	</div>    
 </body>
 <script>
-    var data, data2, scale, recipe_data, slow_write;
+    var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
     var color_scale = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#ffffff','#e0e0e0','#bababa','#878787','#4d4d4d','#1a1a1a'];
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
@@ -134,53 +133,61 @@
 	//load nutrition data from usda
     .defer(d3.json, "data/recipe_to_nutrition_final.json")
     .defer(d3.json, "data/nutrition_reduced.json")
-    .defer(d3.json, "data/search_ingredients.json")
+    .defer(d3.json, "data/full_format_recipes.json")
     .await(function (error, file1, file2, file3) {
         console.log(error);
         //{recipe: {ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}, recipe2...}
-        data = file1;
-        var recipe_ing = {};
-        for (var i = 0; i < data.length; i++){
-            //console.log(Object.keys(data[i])[0]);
-            //console.log(data[i][Object.keys(data[i])[0]]);
-            recipe_ing[Object.keys(data[i])[0]] = data[i][Object.keys(data[i])[0]];
+        recipe_ing = {};
+        recipe_cal = {};
+        recipe_search_list = [];
+        var removed_recipes = {};
+        for (var i = 0; i < file3.length; i++){
+        	if (file3[i]['calories'] != null){
+            	recipe_cal[file3[i]['title']] = file3[i]['calories'];
+            }
+            else{
+            	removed_recipes[file3[i]['title']] = file3[i]['title'];
+            }
         }
+        for (var i = 0; i < file1.length; i++){
+            var title = Object.keys(file1[i])[0];
+            if (removed_recipes[title]==null){
+            	 recipe_ing[title] = file1[i][title];
+            	 recipe_search_list.push({'title': title, 'ingredients': Object.keys(file1[i][title])});
+            }
+        }
+        //console.log(recipe_search_list);
         ing_nut = file2;
-        ing_rec = file3;
         var scales = [];
-        var axis_x = 13;
-        var axis_y = 50;
-        create_axis(scales, axis_x, axis_y);
-        var base_x = 15;
-        var base_y = 65;
-        create_graph('Chicken with Sun-Dried Tomato Cream Sauce ', recipe_ing, ing_nut, scales, base_x, base_y);
-  
-        //searching the recipe section
-        // $("input").keyup(function(){
-        //    var val = this.value;
-        //    slow_write(val);
-        // });
-
-         // console.log(recipe_ing);
-        // var recipes = Object.keys(recipe_ing);
-        // var random_recipe = recipes[Math.round(Math.random()*6791)];
-        // console.log(random_recipe);
+        create_axis(scales);
 
         //at some point, prevent enter pressing/make it call search function
 
-        document.getElementById("recipe-list").innerHTML = "You searched for: stuff <br>";
-        for (var i = 0; i < 10; i++){
-            var recipe_name = Object.keys(recipe_ing)[i]
-            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name);
-            var ing_list = Object.keys(recipe_ing[recipe_name]);
-            for (var j = 0; j < ing_list.length; j++){
-                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
-                // console.log(ing_nut);
-                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
-            }
-        }
-        
+        var options = {keys:['ingredients'], id: 'title'};
+		var fuse = new Fuse (recipe_search_list, options);
+
+        $("#search-box").keyup(function(){
+	        var val = this.value;
+	        slow_write(val);
+        });
+        var slow_write = _.debounce( function(term){
+		    fuse.search(term);
+			var results = fuse.results;
+
+	        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
+	        for (var i = 0; i < 10; i++){
+	            var recipe_name = results[i]['item'];
+	            d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+	            d3.select("#recipe-name-box"+i).append("p").attr("class", "recipe-name").text(recipe_name);
+	            var ing_list = Object.keys(recipe_ing[recipe_name]);
+	            for (var j = 0; j < ing_list.length; j++){
+	                var NDBNo = Number(recipe_ing[recipe_name][ing_list[j]]['NDBNo']);
+	                d3.select("#recipe-name-box"+i).append("p").attr("class", "ingredients").text(ing_list[j]);
+	            }
+        	}
+		}, 500);
+
+		create_graph('4-3-2-1 Spice Rub ', recipe_ing, ing_nut, scales, recipe_cal);
     });
 	
 	/* Macronutrient Calculator */
@@ -231,6 +238,5 @@
 				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
 	}
-</script>
-<script>
+
 </script>
