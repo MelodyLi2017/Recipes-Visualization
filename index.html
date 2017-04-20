@@ -156,7 +156,7 @@
 	</div>    
 </body>
 <script>
-    var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
+    var recipe_ing, recipe_cal, ing_nut, scale, recipe_data, slow_write, recipe_search_list;
     var color_scale = ['#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
 	var scales;
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
@@ -250,7 +250,7 @@
 				console.log(results);
 				var new_results = [];
 				for (i = 0; i <results.length; i++){
-					if (results[i]['score'] < .20){
+					if (results[i]['score'] < .30){
 						new_results.push(results[i]['item']);
 					}
 				}
@@ -310,28 +310,6 @@
 		    getIcon(term);  
 		}, 700);  
     });
-	
-
-	$(".ingredient").click(function(){
-		console.log("seomgthing" + this.text);
-	})
-
-	var build = {'Energ_Kcal': 0, 'Lipid_Tot': 0, 'Carbohydrt': 0, 'Protein': 0};
-	var weight = document.getElementsByName("weight");
-	var height = document.getElementsByName("height");
-	var age = document.getElementsByName("age");
-	var gender = document.getElementsByName("gender");
-
-	weight.oninput = function(){
-		if (d3.select("rect") != null){
-			for(var i = 0; i < 2; i ++){
-				if (gender[i].checked) {
-					var BMR = BMRCalculator(gender[i].value, weight.value, height.value, age.value);
-					console.log(BMR);
-				}
-			}
-		}
-	}
 
 	/* Macronutrient Calculator */
 	function BMRCalculator(gender, weight, height, age){
@@ -394,26 +372,24 @@
 				.attr("id", element);
 	}
 	
-	function toggleInstruction(element){
-		var titles = document.getElementsByClassName("titles");
-		if (d3.select(element).style("display") == "none"){
-			if (!instructionsActive){
-				d3.select(element).style("display", "block");
-				instructionsActive = true;
-				console.log(element);
-				update_graph(titles[element.substring(element.length-1)].innerText,recipe_ing, recipe_cal, ing_nut, scales);
-				console.log(titles[element.substring(element.length-1)].innerText);
-				for (var i = 0; i < titles.length; i++){
-					titles[i].style.display = "none";
+		function toggleInstruction(element){
+			var titles = document.getElementsByClassName("titles");
+			if (d3.select(element).style("display") == "none"){
+				if (!instructionsActive){
+					d3.select(element).style("display", "block");
+					instructionsActive = true;
+					update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_cal, ing_nut, scales);
+					for (var i = 0; i < titles.length; i++){
+						titles[i].style.display = "none";
+					}
 				}
 			}
+			else {
+				d3.select(element).style("display", "none");
+				instructionsActive = false;
+					for (var i = 0; i < titles.length; i++){
+						titles[i].style.display = "block";
+					}
+			}
 		}
-		else {
-			d3.select(element).style("display", "none");
-			instructionsActive = false;
-				for (var i = 0; i < titles.length; i++){
-					titles[i].style.display = "block";
-				}
-		}
-	}
 </script>

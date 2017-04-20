@@ -5,6 +5,7 @@
 //get information for nicole
 function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
     //nutrition strings as in data files
+    console.log(recipe_ing);
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
     'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
     // var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Carbohydrt', 'Protein'];
@@ -56,10 +57,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    console.log(ing + ": "+ amount_recipe);
-                    console.log(ratio);
-                    console.log("tot_nutrients: " + tot_nutrients);
+                    // console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    // console.log(ing + ": "+ amount_recipe);
+                    // console.log(ratio);
+                    // console.log("tot_nutrients: " + tot_nutrients);
                 }
                 d3.select("#bars")
                 .append("rect")
