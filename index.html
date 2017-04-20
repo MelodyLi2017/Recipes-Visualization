@@ -177,7 +177,7 @@
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
 			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
         	for (var j = 0; j <10; j++){
-        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "ingredients"+j);
+        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j);
         	}
         }
 
@@ -187,7 +187,7 @@
         		for (var i = 0; i < 10; i++){
 			        document.getElementById("recipe-name"+i).innerHTML = '';
 		            for (var j = 0; j < 10; j++){
-		               	d3.select("#ingredients"+j).text('');
+		               	d3.select("#ingredients"+ i + ", " + j).text('');
 		            }
 	        	}
 	        	search_count = 0;
@@ -215,7 +215,7 @@
 					for (var i = 0; i < 10; i++){
 			        	document.getElementById("recipe-name"+i).innerHTML = '';
 		            	for (var j = 0; j < 10; j++){
-		               		d3.select("#ingredients"+j).text('');
+		               		d3.select("#ingredients"+ i + ", " + j).text('');
 		            	}
 	        		}
 			    	d3.selectAll("rect").remove();
@@ -234,8 +234,16 @@
 			            var recipe_name = arr[i];
 				        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
 				        var ing_list = Object.keys(recipe_ing[recipe_name]);
-			            for (var j = 0; j < 10; j++){
-			               	d3.select("#ingredients"+j).text(ing_list[j]);
+				        if (ing_list.length < 10){
+				        	list_max = ing_list.length;
+				        }
+				        else {
+				        	list_max = 10;
+				        }
+			            for (var j = 0; j < list_max; j++){
+			            	if (ing_list[j].trim() !=''){
+			            		document.getElementById("#ingredients"+ i + ", " + j).innerHTML = ing_list[j];
+			            	}
 			            }
 		        	}
 			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		

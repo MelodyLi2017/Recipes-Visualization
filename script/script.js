@@ -42,10 +42,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    console.log(ing + ": "+ amount_recipe);
-                    console.log(ratio);
-                    console.log("tot_nutrients: " + tot_nutrients);
+                    // console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    // console.log(ing + ": "+ amount_recipe);
+                    // console.log(ratio);
+                    // console.log("tot_nutrients: " + tot_nutrients);
                 }
                 d3.select("#bars")
                 .append("rect")
@@ -58,7 +58,12 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 .attr("fill", color)
                 .attr("stroke", color);
                 agg_x += scales[i](tot_nutrients);
-                agg_nutrients+=amount_recipe*amount_per*ratio;
+                if (i == 0){
+                     agg_nutrients+=amount_recipe*amount_per;
+                }
+                else{
+                    agg_nutrients+=amount_recipe*amount_per*ratio;
+                }
             }
             if (j== (max-1)) {
                 console.log(nutrition_array[i]+": "+ agg_nutrients);
