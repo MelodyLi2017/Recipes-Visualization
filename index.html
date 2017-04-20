@@ -174,10 +174,10 @@
 
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#recipesContainer .ingredients')");	
-			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").style("display", "none");
+        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
+			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
         	for (var j = 0; j <10; j++){
-        		d3.select("#recipe-name-box"+i+ " .ingredients").append("p").attr("id", "ingredients"+j);
+        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "ingredients"+j);
         	}
         }
 
@@ -246,7 +246,7 @@
 			        else{
 			        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
 			        }
-			        return arr; 
+			        //return arr; 
 			    }
 		    } 
 		    getIcon(term);  
@@ -313,9 +313,11 @@
 	}
 	
 	function toggleInstruction(element){
-		if (d3.select(element).style("display") == "none" && !instructionsActive){
-			d3.select(element).style("display", "block");
-			instructionsActive = true;
+		if (d3.select(element).style("display") == "none"){
+			if (!instructionsActive){
+				d3.select(element).style("display", "block");
+				instructionsActive = true;
+			}
 		}
 		else {
 			d3.select(element).style("display", "none");
