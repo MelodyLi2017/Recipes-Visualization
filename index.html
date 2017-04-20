@@ -204,12 +204,14 @@
         var options = {keys:['ingredients'], id: 'title'};
 		var fuse = new Fuse (recipe_search_list, options);
 
+
+		var prev_search;
         $("#search-box").keyup(function(){
 	        var val = this.value;
             if(!val.match("^[a-zA-Z0-9 ]*$")){
             	document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
-            else{
+            else if (val.trim() != prev_search){
 				var final_results = slow_write(val);
 				//add page numbers
             }
@@ -222,11 +224,12 @@
 			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
         	for (var j = 0; j <10; j++){
-        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j);
+        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j).attr("class", "ingredient");
         	}
         }
 
         var slow_write = _.debounce( function(term){
+        	prev_search = term.trim();
         	if (term.trim()==''){
         		document.getElementById("recipe-list").innerHTML = "You searched for:  <br>";
         		for (var i = 0; i < 10; i++){
@@ -247,7 +250,7 @@
 				console.log(results);
 				var new_results = [];
 				for (i = 0; i <results.length; i++){
-					if (results[i]['score'] < .35){
+					if (results[i]['score'] < .20){
 						new_results.push(results[i]['item']);
 					}
 				}
@@ -308,6 +311,11 @@
 		}, 700);  
     });
 	
+
+	$(".ingredient").click(function(){
+		console.log("seomgthing" + this.text);
+	})
+
 	var build = {'Energ_Kcal': 0, 'Lipid_Tot': 0, 'Carbohydrt': 0, 'Protein': 0};
 	var weight = document.getElementsByName("weight");
 	var height = document.getElementsByName("height");
@@ -319,6 +327,7 @@
 			for(var i = 0; i < 2; i ++){
 				if (gender[i].checked) {
 					var BMR = BMRCalculator(gender[i].value, weight.value, height.value, age.value);
+					console.log(BMR);
 				}
 			}
 		}
