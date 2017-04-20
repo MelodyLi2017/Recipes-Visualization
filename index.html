@@ -114,14 +114,13 @@
 </body>
 <script>
     var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
-    var color_scale = ['#252525', '#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
+    var color_scale = ['#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
 
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
 	var instructionsActive = false;
 	var search_count = 0;
-   // svg.append("rect").attr("width", 2000).attr("height", 1200).style("fill", "green").style("fill-opacity", 0.1);
 
 	d3.queue()
 	//load recipe data from epicurious.com
@@ -137,7 +136,7 @@
         recipe_search_list = [];
         var removed_recipes = {"Tomato Butter ":"Tomato Butter "};
         for (var i = 0; i < file3.length; i++){
-        	if (file3[i]['calories'] != null && file3[i]['calories'] != "Infinity" && file3[i]['title'].indexOf("'")==-1){
+        	if (file3[i]['calories'] != null && file3[i]['calories'] >100 && file3[i]['title'].indexOf("'")==-1){
             	recipe_cal[file3[i]['title']] = file3[i]['calories'];
             }
             else{
@@ -148,7 +147,7 @@
             var title = Object.keys(file1[i])[0];
             if (title!=null && removed_recipes[title]==null && title.indexOf("'") ==-1 
             	&& title.indexOf("Dressing")==-1 && title.indexOf("Stock")==-1 && 
-            	title.indexOf("Broth") == -1){
+            	title.indexOf("Broth") == -1 && title.indexOf("Butter") == -1){
             	recipe_ing[title] = file1[i][title];
             	recipe_search_list.push({'title': title, 'ingredients': Object.keys(file1[i][title])});
             }
@@ -169,6 +168,7 @@
             }
             else{
 				var final_results = slow_write(val);
+				//add page numbers
             }
         });
 
@@ -197,11 +197,12 @@
 	       	}
         	else{
 	        	search_count += 1;
-			    fuse.search(term);
+			    fuse.search(" "+term);
 				var results = fuse.results;
+				console.log(results);
 				var new_results = [];
 				for (i = 0; i <results.length; i++){
-					if (results[i]['score'] < .5){
+					if (results[i]['score'] < .35){
 						new_results.push(results[i]['item']);
 					}
 				}
@@ -210,7 +211,7 @@
 			    });
 			    if (arr.length == 0){
 			    	document.getElementById("recipe-list").innerHTML = "You searched for: "+term+"  <br>";
-					document.getElementById("errorMessage").innerHTML = term + "was not found. Please try again.";
+					document.getElementById("errorMessage").innerHTML = term + " was not found. Please try again.";
 					for (var i = 0; i < 10; i++){
 			        	document.getElementById("recipe-name"+i).innerHTML = '';
 		            	for (var j = 0; j < 10; j++){
@@ -223,7 +224,13 @@
 			    }
 			    else{
 			    	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
-			        for (var i = 0; i < 10; i++){
+			        if (arr.length < 10){
+			        	list_num = arr.length;
+			        }
+			        else {
+			        	list_num = 10;
+			        }
+			        for (var i = 0; i < list_num; i++){
 			            var recipe_name = arr[i];
 				        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
 				        var ing_list = Object.keys(recipe_ing[recipe_name]);

@@ -5,13 +5,11 @@
 //get information for nicole
 function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
     //nutrition strings as in data files
-    console.log(recipe);
-    //var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
-    //'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
-    var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Carbohydrt', 'Protein'];
+    var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
+    'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
+    // var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Carbohydrt', 'Protein'];
     //{ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}
     var ing_full = recipe_ing[recipe];
-    console.log(ing_full);
     var calories = recipe_cal[recipe];
     //at some point in time, filter out recipes with > 11 ingredients
     var ratio = 0;
@@ -26,13 +24,11 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
         else{
             max = ing_list.length;
         }
-        for (var j = 0; j < ing_list.length; j++){
+        for (var j = 0; j < max; j++){
             var ing = ing_list[j];
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
-                console.log("calories:"+calories);
-                console.log("amount of " + nutrient_list[i]+" per 100 gram: " + amount_per);
                 if (ing_full[ing]['unit']=="NA"){
                     var amount_recipe = ing_full[ing]['magnitude'];
                 }
@@ -44,44 +40,44 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                     var color = "#3E59B3";
                 }
                 else{
-                    var tot_nutrients = amount_recipe*amount_per*Number(ratio);
+                    var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    console.log("ratio"+ratio);
+                    console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    console.log(ing + ": "+ amount_recipe);
+                    console.log(ratio);
+                    console.log("tot_nutrients: " + tot_nutrients);
                 }
-                console.log(ing + ": amount of " +" grams: " + amount_recipe);
-                console.log("total nutrients per serving: " + tot_nutrients);
-                console.log(scales);
                 d3.select("#bars")
                 .append("rect")
                 .attr("class",ing)
                 .attr("id", "bar"+i +", " + j)
                 .attr("x", agg_x + 100)
-                .attr("y", 70+ i*60)
-                .attr("height", 30)
+                .attr("y", 75+ i*60)
+                .attr("height", 20)
                 .attr("width", scales[i](tot_nutrients))
                 .attr("fill", color)
                 .attr("stroke", color);
-                //we're going to have problems with recipes with more than 11 ingredients
                 agg_x += scales[i](tot_nutrients);
-                agg_nutrients+=amount_recipe*amount_per;
+                agg_nutrients+=amount_recipe*amount_per*ratio;
+            }
+            if (j== (max-1)) {
+                console.log(nutrition_array[i]+": "+ agg_nutrients);
             }
         }
         if (i == 0){
             if (calories > agg_nutrients){
-                console.log("something is wrong: " + agg_nutrients);
                 ratio = calories/agg_nutrients;
             }
             else{
                 ratio = calories/agg_nutrients;
-                console.log("ratio: " + ratio);
             }
         }
     }
 }
 
-function update_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y){
+function update_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales){
     d3.selectAll("rect").remove();
-    create_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales, x, y);
+    create_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales);
 }
 
 function findMax(recipe, recipe_ing, ing_nut, recommend){
@@ -128,9 +124,9 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
 function create_axis (scales){
 // function create_axis (scales, x, y, domain){
     //[                       Calories,      Fat,       Cholesterol,     crbs, 
-    var nutrient_domains = [[0, 2000*1.5], [0, 65*1.5], [0, 300*1.5], [0, 300*1.5],
+    var nutrient_domains = [[0, 2000*1.4], [0, 65*1.4], [0, 300*1.4], [0, 300*1.4],
     //Fiber,       Sugar,       Protein         calc,         iron, 
-    [0, 25*1.5], [0, 50*1.5], [0, 50*1.5], [0, 1000*1.5], [0, 18*1.5],
+    [0, 25*1.4], [0, 50*1.4], [0, 50*1.4], [0, 1000*1.4], [0, 18*1.4],
     //vit a, vitc]
     // [0, 5000*1.3], [0, 60*1.3]];
     // var axes = [];
@@ -144,7 +140,7 @@ function create_axis (scales){
     //     .text(nutrient_list[k])
     //     .attr("x", 13)
     //     .attr("y", y_coord-30);
-    [0, 5000*1.2], [0, 60*1.2]];
+    [0, 5000*1.4], [0, 60*1.4]];
     // var nutrient_domains = [[0, domain[0]], [0, domain[1]], [0, domain[2]], [0, domain[3]]];
     var axes = [];
 
