@@ -18,7 +18,10 @@
 			font-family: 'Nunito', sans-serif;
 			background-color: #FFDE84;
 			color: brown;
-			font-size: 12pt;
+			font-size: 15pt;
+			margin: 0 auto;
+			padding-top: 20px;
+			width: 1080px;
 		}
         #text {font-size: 15; font-weight: bold;}
 		
@@ -32,22 +35,25 @@
 			font-family: 'Montserrat Alternates', sans-serif;
 			font-style: italic;
 			color: darkseagreen;
+			font-size: 18pt;
 		}
 		
 		#personalInfo{
-			width: 300px;
+			width: 400px;
 		}
 		.labels{
 			float: left;
-			margin-left: 10px;
-			margin-top: 3px;
+			margin-left: 2px;
 		}
 		.inputs{
 			float: right;
-			margin-right: 10px;
+			margin-right: 60px;
+			padding: 3px;
 		}
 		#data{
 			float: right;
+			width: 600px;
+			padding-top: 0px;
 		}
 		#pot{
 			float: left;
@@ -59,6 +65,25 @@
 		}
 		#search-box{
 			width: 400px;
+			height: 40px;
+			font-size: 18pt;
+			color: #BF262E;	
+			margin-top: 5px;
+		}
+		h2{
+			margin-top: -10px;
+			margin-bottom: 0px;
+		}
+		#submit{
+			width: 300px;
+			margin-left: 50px;
+			color: white;
+			background-color: darkseagreen;
+			height: 30px;
+			border: 1px solid darkseagreen;
+			font-size: 17pt;
+			font-family: 'Montserrat Alternates', sans-serif;
+			margin-top: 10px;
 		}
 	</style>
 </head>
@@ -68,12 +93,32 @@
 		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
 	</div>
 	<div id = "pot">
-		<svg id = "testSvg" width = "400" height = "400" style = "border: 1px black solid">
+		<svg id = "testSvg" width = "400" height = "400">
 			<image y = "140" xlink:href = "icon/pot.svg"></image>
 		</svg>
 		<form>
 			<input type ='text' id = 'search-box'></input>
 		</form>
+		<div id  = "personalInfo">
+			<form>
+				<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
+				<h2>Macronutrient Calculator</h2>
+				<div class = "labels">
+					Gender:<br>
+					Weight(Lbs):</br>
+					Height(Inches):</br>
+					Age(Years):<br>
+				</div>
+				<div class = "inputs">
+					<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
+					<input type = "radio" name = "gender" value = "1">Female<br>
+					<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
+					<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
+					<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
+				</div>
+				<input type = "submit" value = "Calculate->" id = "submit">
+			</form>
+		</div>
 <div id = "error"><p id = "errorMessage"></p></div>
 	</div>
 	<div id = "data">
@@ -90,25 +135,6 @@
 			</svg>
 			
 			
-			<div id  = "personalInfo">
-				<form>
-					<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
-					<div class = "labels">
-						Gender:<br>
-						Weight(Lbs):</br>
-						Height(Inches):</br>
-						Age(Years):<br>
-					</div>
-					<div class = "inputs">
-						<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
-						<input type = "radio" name = "gender" value = "1">Female<br>
-						<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
-						<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
-						<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
-					</div>
-					<input type = "submit" value = "submit">
-				</form>
-			</div>
 		</div>
 	</div>    
 </body>
