@@ -10,10 +10,29 @@
     <script src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js'></script> 
     <script src="script/search.js"></script>
 	<link rel = "stylesheet" href = "css/animation.css">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <style>
         /*svg {border: 1px black solid;}*/
-        body {font-family: 'Alegreya Sans', Calibri, sans-serif;}
+        body {
+			font-family: 'Nunito', sans-serif;
+			background-color: #FFDE84;
+			color: brown;
+			font-size: 12pt;
+		}
         #text {font-size: 15; font-weight: bold;}
+		
+		.ttl{
+			font-family: 'Montserrat Alternates', sans-serif;
+			font-size: 30pt;
+			font-weight: bold;
+			color: #BF262E;
+		}
+		.subttl{
+			font-family: 'Montserrat Alternates', sans-serif;
+			font-style: italic;
+			color: darkseagreen;
+		}
 		
 		#personalInfo{
 			width: 300px;
@@ -38,20 +57,22 @@
 			top: 100px;
 			right: 100px;
 		}
+		#search-box{
+			width: 400px;
+		}
 	</style>
 </head>
 <body>
 	<div id = "topText">
-		<h1>What to eat?</h1>
+		<span class = "ttl">What to Eat?</span> <span class = "subttl">A Recipe and Nutrient Data Visualization</span>
 		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
 	</div>
 	<div id = "pot">
-		<svg id = "testSvg" width = "500" height = "500" style = "border: 1px black solid">
-			<image y = "270" width = "500" xlink:href = "icon/pot.svg"></image>
+		<svg id = "testSvg" width = "400" height = "400" style = "border: 1px black solid">
+			<image y = "140" xlink:href = "icon/pot.svg"></image>
 		</svg>
 		<form>
 			<input type ='text' id = 'search-box'></input>
-			<input type = 'submit' id = 'submit'></input>
 		</form>
 <div id = "error"><p id = "errorMessage"></p></div>
 	</div>
@@ -153,9 +174,10 @@
 
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");	
+        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#recipesContainer .ingredients')");	
+			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").style("display", "none");
         	for (var j = 0; j <10; j++){
-        		d3.select("#recipe-name-box"+i).append("p").attr("id", "ingredients"+j).attr("class", "ingredients");
+        		d3.select("#recipe-name-box"+i+ " .ingredients").append("p").attr("id", "ingredients"+j);
         	}
         }
 
@@ -186,7 +208,6 @@
 				arr = new_results.filter( function( item, index, inputArray ) {
 			    	return inputArray.indexOf(item) == index;
 			    });
-
 			    if (arr.length == 0){
 			    	document.getElementById("recipe-list").innerHTML = "You searched for: "+term+"  <br>";
 					document.getElementById("errorMessage").innerHTML = term + "was not found. Please try again.";
@@ -220,9 +241,9 @@
 			        }
 			        return arr; 
 			    }
-		    }   
-		}, 500);
-  
+		    } 
+		    getIcon(term);  
+		}, 700);  
     });
 	
 	/* Macronutrient Calculator */
@@ -265,7 +286,7 @@
 	function fadeIn(element){
 		svg = d3.select("#testSvg");
 		svg.append("image")
-				.attr("x", Math.random() * 400 + 50)
+				.attr("x", Math.random() * 300 + 50)
 				.attr("y", 0)
 				.attr("height", 50)
 				.attr("width", 50)
@@ -277,7 +298,7 @@
 	function fadeInText(element){
 		svg = d3.select("#testSvg");
 		svg.append("text")
-				.attr("x", Math.random() * 400 + 50)
+				.attr("x", Math.random() * 300 + 50)
 				.attr("y", 0)
 				.text(element)
 				.attr("class", "fade fall")
