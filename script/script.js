@@ -29,8 +29,22 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
+                console.log(ing_nut[NDBNo]['Shrt_Desc']);
                 if (ing_full[ing]['unit']=="NA"){
-                    var amount_recipe = ing_full[ing]['magnitude'];
+                    if (ing.indexOf(" egg") != -1){
+                         var amount_recipe = 1;
+                         if (ing_full[ing]['magnitude'] > 10){
+                            var amount_recipe =2;
+                         }
+                    }
+                    else{
+                        if (ing_full[ing]['magnitude'] == 0){
+                            var amount_recipe = 1;
+                        }
+                        else {
+                            var amount_recipe = ing_full[ing]['magnitude'];
+                        }
+                    }
                 }
                 else{
                      var amount_recipe = Number(ing_full[ing]['magnitude'])/100;
@@ -42,10 +56,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    // console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    // console.log(ing + ": "+ amount_recipe);
-                    // console.log(ratio);
-                    // console.log("tot_nutrients: " + tot_nutrients);
+                    console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    console.log(ing + ": "+ amount_recipe);
+                    console.log(ratio);
+                    console.log("tot_nutrients: " + tot_nutrients);
                 }
                 d3.select("#bars")
                 .append("rect")
@@ -129,24 +143,10 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
 function create_axis (scales){
 // function create_axis (scales, x, y, domain){
     //[                       Calories,      Fat,       Cholesterol,     crbs, 
-    var nutrient_domains = [[0, 2000*1.4], [0, 65*1.4], [0, 300*1.4], [0, 300*1.4],
+    var nutrient_domains = [[0, 2000*2], [0, 65*2], [0, 300*2], [0, 300*2],
     //Fiber,       Sugar,       Protein         calc,         iron, 
-    [0, 25*1.4], [0, 50*1.4], [0, 50*1.4], [0, 1000*1.4], [0, 18*1.4],
-    //vit a, vitc]
-    // [0, 5000*1.3], [0, 60*1.3]];
-    // var axes = [];
-    // for (var k = 0; k < nutrient_domains.length; k++){
-    //     scale = d3.scaleLinear().domain(nutrient_domains[k]).range([0, 500]);
-    //     scales.push(scale);
-    //     var axis = d3.axisTop(scale);
-    //     var y_coord = k*100 + 50;
-    //     d3.select("#text")
-    //     .append("text")
-    //     .text(nutrient_list[k])
-    //     .attr("x", 13)
-    //     .attr("y", y_coord-30);
-    [0, 5000*1.4], [0, 60*1.4]];
-    // var nutrient_domains = [[0, domain[0]], [0, domain[1]], [0, domain[2]], [0, domain[3]]];
+    [0, 25*2], [0, 50*2], [0, 50*2], [0, 1000*2], [0, 18*2],
+    [0, 5000*2], [0, 60*2]];
     var axes = [];
 
     for (i = 0; i < nutrient_domains.length; i++){
@@ -169,3 +169,5 @@ function create_axis (scales){
         .call(axis);
     }
 }
+
+

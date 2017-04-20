@@ -111,7 +111,7 @@
 				</div>
 				<div class = "inputs">
 					<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
-					<input type = "radio" name = "gender" value = "1">Female<br>
+					<input type = "radio"  name = "gender" value = "1">Female<br>
 					<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
 					<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
 					<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
@@ -287,6 +287,22 @@
 		}, 700);  
     });
 	
+	var build = {'Energ_Kcal': 0, 'Lipid_Tot': 0, 'Carbohydrt': 0, 'Protein': 0};
+	var weight = document.getElementsByName("weight");
+	var height = document.getElementsByName("height");
+	var age = document.getElementsByName("age");
+	var gender = document.getElementsByName("gender");
+
+	weight.oninput = function(){
+		if (d3.select("rect") != null){
+			for(var i = 0; i < 2; i ++){
+				if (gender[i].checked) {
+					var BMR = BMRCalculator(gender[i].value, weight.value, height.value, age.value);
+				}
+			}
+		}
+	}
+
 	/* Macronutrient Calculator */
 	function BMRCalculator(gender, weight, height, age){
 		//gender: 0 = male, 1 = female
