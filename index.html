@@ -347,6 +347,7 @@
 	
 	function fadeIn(element){
 		svg = d3.select("#testSvg");
+		d3.select(".fade").remove();
 		svg.append("image")
 				.attr("x", Math.round(Math.random()) * 175 + 125)
 				.attr("y", 0)
@@ -359,6 +360,7 @@
 	
 	function fadeInText(element){
 		svg = d3.select("#testSvg");
+		d3.select(".fade").remove();
 		svg.append("text")
 				.attr("x", Math.round(Math.random()) * 175 + 125)
 				.attr("y", 0)
