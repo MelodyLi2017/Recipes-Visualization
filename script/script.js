@@ -31,7 +31,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
-                console.log(calories);
+                console.log("calories:"+calories);
                 console.log("amount of " + nutrient_list[i]+" per 100 gram: " + amount_per);
                 if (ing_full[ing]['unit']=="NA"){
                     var amount_recipe = ing_full[ing]['magnitude'];
@@ -46,16 +46,17 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*Number(ratio);
                     var color = color_scale[j];
-                    console.log(ratio);
+                    console.log("ratio"+ratio);
                 }
                 console.log(ing + ": amount of " +" grams: " + amount_recipe);
                 console.log("total nutrients per serving: " + tot_nutrients);
+                console.log(scales);
                 d3.select("#bars")
                 .append("rect")
                 .attr("class",ing)
                 .attr("id", "bar"+i +", " + j)
                 .attr("x", agg_x + 100)
-                .attr("y", 65+ i*60)
+                .attr("y", 70+ i*60)
                 .attr("height", 30)
                 .attr("width", scales[i](tot_nutrients))
                 .attr("fill", color)
@@ -127,9 +128,9 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
 function create_axis (scales){
 // function create_axis (scales, x, y, domain){
     //[                       Calories,      Fat,       Cholesterol,     crbs, 
-    var nutrient_domains = [[0, 2000*1.2], [0, 65*1.2], [0, 300*1.2], [0, 300*1.2],
+    var nutrient_domains = [[0, 2000*1.5], [0, 65*1.5], [0, 300*1.5], [0, 300*1.5],
     //Fiber,       Sugar,       Protein         calc,         iron, 
-    [0, 25*1.3], [0, 50*1.3], [0, 50*1.3], [0, 1000*1.3], [0, 18*1.3],
+    [0, 25*1.5], [0, 50*1.5], [0, 50*1.5], [0, 1000*1.5], [0, 18*1.5],
     //vit a, vitc]
     // [0, 5000*1.3], [0, 60*1.3]];
     // var axes = [];

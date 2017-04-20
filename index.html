@@ -114,9 +114,9 @@
         recipe_ing = {};
         recipe_cal = {};
         recipe_search_list = [];
-        var removed_recipes = {};
+        var removed_recipes = {"Tomato Butter ":"Tomato Butter "};
         for (var i = 0; i < file3.length; i++){
-        	if (file3[i]['calories'] != null && file3[i]['title'].indexOf("'")==-1){
+        	if (file3[i]['calories'] != null && file3[i]['calories'] != "Infinity" && file3[i]['title'].indexOf("'")==-1){
             	recipe_cal[file3[i]['title']] = file3[i]['calories'];
             }
             else{
@@ -125,9 +125,11 @@
         }
         for (var i = 0; i < file1.length; i++){
             var title = Object.keys(file1[i])[0];
-            if (removed_recipes[title]==null){
-            	 recipe_ing[title] = file1[i][title];
-            	 recipe_search_list.push({'title': title, 'ingredients': Object.keys(file1[i][title])});
+            if (title!=null && removed_recipes[title]==null && title.indexOf("'") ==-1 
+            	&& title.indexOf("Dressing")==-1 && title.indexOf("Stock")==-1 && 
+            	title.indexOf("Broth") == -1){
+            	recipe_ing[title] = file1[i][title];
+            	recipe_search_list.push({'title': title, 'ingredients': Object.keys(file1[i][title])});
             }
         }
         //console.log(recipe_search_list);
@@ -141,13 +143,14 @@
 
         $("#search-box").keyup(function(){
 	        var val = this.value;
-            if(!val.match("^[a-zA-Z0-9]*$")){
-            document.getElementById("errorMessage").innerHTML = "Please re-type.";
+            if(!val.match("^[a-zA-Z0-9 ]*$")){
+            	document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
             else{
-				var results = slow_write(val);
+				var final_results = slow_write(val);
             }
         });
+
         for (var i = 0; i < 10; i++){
         	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#recipe-name-box"+i+" .ingredients')");	
@@ -174,29 +177,50 @@
 	        	search_count += 1;
 			    fuse.search(term);
 				var results = fuse.results;
-				results.forEach(function(d, i){
-					
-				})
+				var new_results = [];
+				for (i = 0; i <results.length; i++){
+					if (results[i]['score'] < .5){
+						new_results.push(results[i]['item']);
+					}
+				}
+				arr = new_results.filter( function( item, index, inputArray ) {
+			    	return inputArray.indexOf(item) == index;
+			    });
 
-		        document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
-		        for (var i = 0; i < 10; i++){
-		            var recipe_name = results[i]['item'];
-			        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
-			        var ing_list = Object.keys(recipe_ing[recipe_name]);
-		            for (var j = 0; j < 10; j++){
-		               	d3.select("#ingredients"+j).text(ing_list[j]);
-		            }
-	        	}
-		        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
-		        if (search_count == 1){
-		        	create_axis(scales/*,  /*domain*/);
-					create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
-		        }
-		        else{
-		        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
-		        }
-		    }
-	        
+			    if (arr.length == 0){
+			    	document.getElementById("recipe-list").innerHTML = "You searched for: "+term+"  <br>";
+					document.getElementById("errorMessage").innerHTML = term + "was not found. Please try again.";
+					for (var i = 0; i < 10; i++){
+			        	document.getElementById("recipe-name"+i).innerHTML = '';
+		            	for (var j = 0; j < 10; j++){
+		               		d3.select("#ingredients"+j).text('');
+		            	}
+	        		}
+			    	d3.selectAll("rect").remove();
+		        	d3.selectAll(".axis").remove();
+		        	d3.selectAll("text").remove();
+			    }
+			    else{
+			    	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
+			        for (var i = 0; i < 10; i++){
+			            var recipe_name = arr[i];
+				        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
+				        var ing_list = Object.keys(recipe_ing[recipe_name]);
+			            for (var j = 0; j < 10; j++){
+			               	d3.select("#ingredients"+j).text(ing_list[j]);
+			            }
+		        	}
+			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
+			        if (scales.length == 0){
+			        	create_axis(scales);
+						create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+			        }
+			        else{
+			        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+			        }
+			        return arr; 
+			    }
+		    }   
 		}, 500);
   
     });
