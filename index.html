@@ -156,7 +156,7 @@
 
 		</div>
 		<div id = "graph">
-			<svg id = "barGraph" width = '700' height = '900'>
+			<svg id = "barGraph" width = '750' height = '900'>
 				<g id = "axes"></g>
 				<g id= "text"></g>
 				<g id = "bars"></g>
@@ -389,34 +389,34 @@
 				.attr("id", element);
 	}
 	
-		function toggleInstruction(element){
-			var titles = document.getElementsByClassName("titles");
-			if (d3.select(element).style("display") == "none"){
-				if (!instructionsActive){
-					d3.select(element).style("display", "block");
-					instructionsActive = true;
-					update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_info, ing_nut, scales);
-					for (var i = 0; i < titles.length; i++){
-						titles[i].style.display = "none";
-					}
+	function toggleInstruction(element){
+		var titles = document.getElementsByClassName("titles");
+		if (d3.select(element).style("display") == "none"){
+			if (!instructionsActive){
+				d3.select(element).style("display", "block");
+				instructionsActive = true;
+				update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_info, ing_nut, scales);
+				for (var i = 0; i < titles.length; i++){
+					titles[i].style.display = "none";
 				}
 			}
-			else {
-				d3.select(element).style("display", "none");
-				instructionsActive = false;
-					for (var i = 0; i < titles.length; i++){
-						titles[i].style.display = "block";
-					}
-			}
 		}
-		function clear_everything(){
-			d3.selectAll('.titles').text("");
-	    	d3.selectAll('.ingredient').text("");
-	    	d3.selectAll(".instructions").text("");
-	    	d3.select(".ing_title").text("")
-			
-	    	d3.selectAll("rect").remove();
-        	d3.selectAll(".axis").remove();
-        	d3.selectAll("text").remove();
+		else {
+			d3.select(element).style("display", "none");
+			instructionsActive = false;
+				for (var i = 0; i < titles.length; i++){
+					titles[i].style.display = "block";
+				}
 		}
+	}
+	function clear_everything(){
+		d3.selectAll('.titles').text("");
+    	d3.selectAll('.ingredient').text("");
+    	d3.selectAll(".instructions").text("");
+    	d3.select(".ing_title").text("")
+		
+    	d3.selectAll("rect").remove();
+    	d3.selectAll(".axis").remove();
+    	d3.selectAll("text").remove();
+	}
 </script>

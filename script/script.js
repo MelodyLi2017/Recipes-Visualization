@@ -4,6 +4,9 @@
 //figure out why some recipes don't work
 //get information for nicole
 function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
+    if (d3.selectAll(".totals").length != 0){
+        d3.selectAll(".totals").remove();
+    }
     //nutrition strings as in data files
     console.log(recipe_ing);
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
@@ -57,10 +60,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    console.log(ing + ": "+ amount_recipe);
-                    console.log(ratio);
-                    console.log("tot_nutrients: " + tot_nutrients);
+                    // console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    // console.log(ing + ": "+ amount_recipe);
+                    // console.log(ratio);
+                    // console.log("tot_nutrients: " + tot_nutrients);
                 }
                 d3.select("#bars")
                 .append("rect")
@@ -92,6 +95,13 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 ratio = calories/agg_nutrients;
             }
         }
+    d3.select("#text")
+    .append("text")
+    .text("Total: "+ Math.trunc(agg_nutrients))
+    .attr("class", "totals")
+    .attr("text-anchor", "end")
+    .attr("x", 750)
+    .attr("y", 90+i*60);
     }
 }
 
