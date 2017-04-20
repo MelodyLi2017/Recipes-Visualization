@@ -11,7 +11,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
     // var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Carbohydrt', 'Protein'];
     //{ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}
     var ing_full = recipe_ing[recipe];
-    var calories = recipe_cal[recipe];
+    var calories = recipe_cal[recipe]['calories'];
     //at some point in time, filter out recipes with > 11 ingredients
     var ratio = 0;
     var ing_list = Object.keys(ing_full);
@@ -30,7 +30,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
-                console.log(ing_nut[NDBNo]['Shrt_Desc']);
+                //console.log(ing_nut[NDBNo]['Shrt_Desc']);
                 if (ing_full[ing]['unit']=="NA"){
                     if (ing.indexOf(" egg") != -1){
                          var amount_recipe = 1;
@@ -57,10 +57,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    // console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    // console.log(ing + ": "+ amount_recipe);
-                    // console.log(ratio);
-                    // console.log("tot_nutrients: " + tot_nutrients);
+                    console.log(ing + ": " + nutrition_array[i] + amount_per);
+                    console.log(ing + ": "+ amount_recipe);
+                    console.log(ratio);
+                    console.log("tot_nutrients: " + tot_nutrients);
                 }
                 d3.select("#bars")
                 .append("rect")
@@ -143,9 +143,9 @@ function findMax(recipe, recipe_ing, ing_nut, recommend){
 
 function create_axis (scales){
 // function create_axis (scales, x, y, domain){
-    //[                       Calories,      Fat,       Cholesterol,     crbs, 
+    //[                       Calories,   Fat,       Cholesterol,     crbs, 
     var nutrient_domains = [[0, 2000*2], [0, 65*2], [0, 300*2], [0, 300*2],
-    //Fiber,       Sugar,       Protein         calc,         iron, 
+    //Fiber,       Sugar,   Protein    calc,         iron, 
     [0, 25*2], [0, 50*2], [0, 50*2], [0, 1000*2], [0, 18*2],
     [0, 5000*2], [0, 60*2]];
     var axes = [];

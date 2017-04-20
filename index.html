@@ -107,8 +107,19 @@
 <body>
 	<div id = "topText">
 		<span class = "ttl">What to Eat?</span> <span class = "subttl">A Recipe and Nutrient Data Visualization</span>
-		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
-	</div>
+		<div class = "sub">
+			<p>If you are ever curious about the nutritional values of each recipe you follow, you are not alone. 
+				There are numerous recipe websites out there: Bon Appetit, Epicurious, NYTimes, Food Network, to name a few. 
+				Very few recipe websites provide nutritional values, though many, even online food ordering services like Grubhub,
+				 have made the attempt and released the beta version. We are fans of the recipe website Epicurious, but unfortunately 
+				 Epicurious does not contain nutritional information beyond a total calorie count.<p>
+			<p> We took the ingredient lists for 5,000 recipes taken from Epicurious website and converted  
+				the amount of each ingredient in each ingredient into grams. 
+				Think of each visualization as a Nutritional Fact label required by FDA on all processed foods, 
+				except here it is real recipe data you can follow at home, allowing you to see which recipe 
+				fits your nutritional needs. Furthermore, total nutritional information can be broken down by ingredient.</p>
+			<p>To get started, search for an ingredient you have in your pantry. </p>
+		</div>
 	<div id = "pot">
 		<svg id = "testSvg" width = "400" height = "350">
 			<image y = "90" xlink:href = "icon/pot.svg"></image>
@@ -156,7 +167,7 @@
 	</div>    
 </body>
 <script>
-    var recipe_ing, recipe_cal, ing_nut, scale, recipe_data, slow_write, recipe_search_list;
+    var recipe_ing, recipe_info, ing_nut, scale, recipe_data, slow_write, recipe_search_list;
     var color_scale = ['#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
 	var scales;
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
@@ -172,15 +183,16 @@
     .defer(d3.json, "data/nutrition_reduced.json")
     .defer(d3.json, "data/full_format_recipes.json")
     .await(function (error, file1, file2, file3) {
+    	console.log(file3);
         console.log(error);
         //{recipe: {ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}, recipe2...}
         recipe_ing = {};
-        recipe_cal = {};
+        recipe_info = {};
         recipe_search_list = [];
         var removed_recipes = {"Tomato Butter ":"Tomato Butter "};
         for (var i = 0; i < file3.length; i++){
-        	if (file3[i]['calories'] != null && file3[i]['calories'] >100 && file3[i]['title'].indexOf("'")==-1){
-            	recipe_cal[file3[i]['title']] = file3[i]['calories'];
+        	if (file3[i]['desc'] != null && file3[i]['calories'] != null && file3[i]['calories'] >100 && file3[i]['title'].indexOf("'")==-1){
+            	recipe_info[file3[i]['title']] = {'calories': file3[i]['calories'], 'description': file3[i]['desc'], 'instructions': file3[i]['directions']};
             }
             else{
             	removed_recipes[file3[i]['title']] = file3[i]['title'];
@@ -209,13 +221,14 @@
         $("#search-box").keyup(function(){
 	        var val = this.value;
             if(!val.match("^[a-zA-Z0-9 ]*$")){
+            	clear_everything();
             	document.getElementById("errorMessage").innerHTML = "Please re-type.";
             }
             else if (val.trim() != prev_search){
 				var final_results = slow_write(val);
 				//add page numbers
             }
-        });
+		});
 
         d3.select("#recipesContainer").append("div").attr("id", "outer-recipe-box");
         for (var i = 0; i < 10; i++){
@@ -223,9 +236,11 @@
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("class", "titles").attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
 			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
+			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "instructions");
         	for (var j = 0; j <10; j++){
         		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j).attr("class", "ingredient");
         	}
+        	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "instructions");
         }
 
         var slow_write = _.debounce( function(term){
@@ -259,19 +274,11 @@
 			    });
 			    if (arr.length == 0){
 			    	document.getElementById("recipe-list").innerHTML = "You searched for: "+term+"  <br>";
-					document.getElementById("errorMessage").innerHTML = term + " was not found. Please try again.";
-					for (var i = 0; i < 10; i++){
-			        	document.getElementById("recipe-name"+i).innerHTML = '';
-		            	for (var j = 0; j < 10; j++){
-		               		d3.select("#ingredients"+ i + ", " + j).text('');
-		            	}
-	        		}
-			    	d3.selectAll("rect").remove();
-		        	d3.selectAll(".axis").remove();
-		        	d3.selectAll("text").remove();
+			    	clear_everything();
+		        	document.getElementById("errorMessage").innerHTML = term + " was not found. Please try again.";
 			    }
 			    else{
-			    	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br>";
+			    	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br><br>	";
 			        if (arr.length < 10){
 			        	list_num = arr.length;
 			        }
@@ -280,29 +287,39 @@
 			        }
 			        for (var i = 0; i < list_num; i++){
 			            var recipe_name = arr[i];
-				        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
-				        var ing_list = Object.keys(recipe_ing[recipe_name]);
-				        if (ing_list.length < 10){
-				        	list_max = ing_list.length;
-				        }
-				        else {
-				        	list_max = 10;
-				        }
-			            for (var j = 0; j < list_max; j++){
-			            	if (ing_list[j].trim() !=''){
-			            		document.getElementById("#ingredients"+ i + ", " + j).innerHTML = ing_list[j];
-			            	}
-			            }
+			            if (recipe_info[recipe_name]!=null){
+					        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
+					        console.log(recipe_name);
+					        document.getElementById("description" + i).innerHTML = recipe_info[recipe_name]['description'];
+					        document.getElementById("instructions0").innerHTML = recipe_info[recipe_name]['instructions'][0]+"<br><br>"
+					        for ( var j = 1; j < recipe_info[recipe_name]['instructions'].length; j++){
+								 document.getElementById("instructions" + i).innerHTML += recipe_info[recipe_name]['instructions'][j]+"<br><br>";				        	
+					        }
+					        var ing_list = Object.keys(recipe_ing[recipe_name]);
+					        if (ing_list.length < 10){
+					        	list_max = ing_list.length;
+					        }
+					        else {
+					        	list_max = 10;
+					        }
+				            for (var j = 0; j < list_max; j++){
+				            	if (ing_list[j].trim() !=''){
+				            		document.getElementById("#ingredients"+ i + ", " + j).innerHTML = ing_list[j];
+				            	}
+				            }
+						}
 						document.getElementById("ingredientsTitle"+i).innerHTML = recipe_name + "<span class = 'backbtn' onclick = 'toggleInstruction("+'"#ingredientsContainer'+i+'")'+"'>Back</span>";
 						console.log(recipe_name + "<span onclick = 'toggleInstruction("+'"#ingredientsContainer"'+i+'")'+">Back</span>");
+						document.getElementById("errorMessage").innerHTML = '';
 		        	}
 			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
-			        if (scales.length == 0){
+			        console.log(document.getElementsByClassName("axis"));
+			        if (document.getElementsByClassName("axis").length == 0){
 			        	create_axis(scales);
-						create_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+						create_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales);
 			        }
 			        else{
-			        	update_graph(results[0]['item'], recipe_ing, recipe_cal, ing_nut, scales);
+			        	update_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales);
 			        }
 			        //return arr; 
 			    }
@@ -378,7 +395,7 @@
 				if (!instructionsActive){
 					d3.select(element).style("display", "block");
 					instructionsActive = true;
-					update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_cal, ing_nut, scales);
+					update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_info, ing_nut, scales);
 					for (var i = 0; i < titles.length; i++){
 						titles[i].style.display = "none";
 					}
@@ -391,5 +408,15 @@
 						titles[i].style.display = "block";
 					}
 			}
+		}
+		function clear_everything(){
+			d3.selectAll('.titles').text("");
+	    	d3.selectAll('.ingredient').text("");
+	    	d3.selectAll(".instructions").text("");
+	    	d3.select(".ing_title").text("")
+			
+	    	d3.selectAll("rect").remove();
+        	d3.selectAll(".axis").remove();
+        	d3.selectAll("text").remove();
 		}
 </script>
