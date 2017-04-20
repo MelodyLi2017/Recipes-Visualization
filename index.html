@@ -158,7 +158,7 @@
 <script>
     var recipe_ing, recipe_cal, scale, recipe_data, slow_write, data, data2, recipe_search_list;
     var color_scale = ['#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
-
+	var scales;
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
     var svg = d3.select("#barGraph");
@@ -197,7 +197,7 @@
         }
         //console.log(recipe_search_list);
         ing_nut = file2;
-        var scales = [];
+        scales = [];
 
         //at some point, prevent enter pressing/make it call search function
 
@@ -375,6 +375,9 @@
 			if (!instructionsActive){
 				d3.select(element).style("display", "block");
 				instructionsActive = true;
+				console.log(element);
+				update_graph(titles[element.substring(element.length-1)].innerText,recipe_ing, recipe_cal, ing_nut, scales);
+				console.log(titles[element.substring(element.length-1)].innerText);
 				for (var i = 0; i < titles.length; i++){
 					titles[i].style.display = "none";
 				}
