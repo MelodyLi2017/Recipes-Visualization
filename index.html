@@ -157,9 +157,11 @@
 		</div>
 		<div id = "graph">
 			<svg id = "barGraph" width = '750' height = '900'>
-				<g id = "axes"></g>
-				<g id= "text"></g>
-				<g id = "bars"></g>
+				<g id = "graph-elements">
+					<g id = "axes"></g>
+					<g id= "text"></g>
+					<g id = "bars"></g>
+				</g>
 			</svg>
 			
 			
@@ -168,7 +170,7 @@
 </body>
 <script>
     var recipe_ing, recipe_info, ing_nut, scale, recipe_data, slow_write, recipe_search_list;
-    var color_scale = ['#252525', '#525252', '#969696', '#bdbdbd', '#ccebc5','#a8ddb5','#7bccc4','#4eb3d3','#2b8cbe','#0868ac','#084081']
+    var color_scale = ['#252525', '#525252', '#969696', '#fc9272','#fb6a4a','#ef3b2c','#cb181d','#a50f15','#67000d']
 	var scales;
     var nutrient_list = ['Calories', 'Fat', 'Cholesterol','Carbohydrates', 'Fiber','Sugar',
      'Protein', 'Calcium', 'Iron', 'Vitamin A', 'Vitamin C'];
@@ -235,11 +237,11 @@
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("class", "titles").attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
 			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredient").attr("id", "ingredientsContainer" + i).style("display", "none");
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
-			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "ingredient");
+			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "description");
         	for (var j = 0; j <10; j++){
         		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j).attr("class", "ingredient");
         	}
-        	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "ingredient");
+        	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "description");
         }
 
         var slow_write = _.debounce( function(term){
@@ -291,13 +293,11 @@
 				            }
 						}
 						document.getElementById("ingredientsTitle"+i).innerHTML = recipe_name + "<span class = 'backbtn' onclick = 'toggleInstruction("+'"#ingredientsContainer'+i+'")'+"'>Back</span>";
-						console.log(recipe_name + "<span onclick = 'toggleInstruction("+'"#ingredientsContainer"'+i+'")'+">Back</span>");
 						document.getElementById("errorMessage").innerHTML = '';
 		        	}
 			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
-			        console.log(document.getElementsByClassName("axis"));
 			        if (document.getElementsByClassName("axis").length == 0){
-			        	create_axis(scales);
+			        	//create_axis(scales);
 						create_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales);
 			        }
 			        else{
@@ -394,6 +394,7 @@
 	function clear_everything(){
 		d3.selectAll('.titles').text(" ");
      	document.getElementsByClassName('ingredient').innerHTML=' ';
+     	document.getElementsByClassName('description').innerHTML=' ';
     	d3.select(".ing_title").text(" ");
 		
     	d3.selectAll("rect").remove();
