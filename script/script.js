@@ -161,16 +161,17 @@ function create_axis (scales){
     var axes = [];
 
     for (i = 0; i < nutrient_domains.length; i++){
-        scale = d3.scaleLinear().domain(nutrient_domains[i]).range([0, 550]);
+        scale = d3.scaleLinear().domain(nutrient_domains[i]).range([0, 500]);
         scales.push(scale);
         var axis = d3.axisTop(scale);
         var y_coord = i*60 + 63;
 
         d3.select("#text")
         .append("text")
+        .attr("class", "graph-text")
         .text(nutrient_list[i])
-        .attr("x", 12)
-        .attr("y", y_coord + 15);
+        .attr("x", 0)
+        .attr("y", y_coord + 18);
 
         d3.select("#axes")
         .append("g")

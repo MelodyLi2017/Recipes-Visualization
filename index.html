@@ -226,7 +226,6 @@
             }
             else if (val.trim() != prev_search){
 				var final_results = slow_write(val);
-				//add page numbers
             }
 		});
 
@@ -393,12 +392,13 @@
 		}
 	}
 	function clear_everything(){
-		d3.selectAll('.titles').text("");
-    	d3.selectAll('.ingredient').text("");
-    	d3.select(".ing_title").text("")
+		d3.selectAll('.titles').text(" ");
+     	document.getElementsByClassName('ingredient').innerHTML=' ';
+    	d3.select(".ing_title").text(" ");
 		
     	d3.selectAll("rect").remove();
     	d3.selectAll(".axis").remove();
-    	d3.selectAll("text").remove();
+    	d3.selectAll(".graph-text").remove();
+    	d3.selectAll(".totals").remove();
 	}
 </script>
