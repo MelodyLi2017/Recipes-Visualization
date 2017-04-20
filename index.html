@@ -58,11 +58,6 @@
 		#pot{
 			float: left;
 		}
-		.ingredients{
-			position: fixed;
-			top: 100px;
-			right: 100px;
-		}
 		#search-box{
 			width: 400px;
 			height: 40px;
@@ -72,6 +67,10 @@
 		}
 		h2{
 			margin-top: -10px;
+			margin-bottom: 0px;
+		}
+		h3{
+			margin-top: 0px;
 			margin-bottom: 0px;
 		}
 		#submit{
@@ -85,6 +84,24 @@
 			font-family: 'Montserrat Alternates', sans-serif;
 			margin-top: 10px;
 		}
+		#outer-recipe-box{
+			margin-top: -10px;
+			height: 300px;
+			width: 550px;
+			overflow: auto;
+		}
+		.ing_title{
+			font-size: 17pt;
+			color: red;
+			padding-top: 10px;
+		}
+		.ingredients p{
+			margin: 5px;
+		}
+		.backbtn{
+			font-size: 12pt;
+			color: darkseagreen;
+		}
 	</style>
 </head>
 <body>
@@ -93,8 +110,8 @@
 		<div class = "sub">Insert some text about how this site works like instructions and such I guess probably should add more text to make this look longer and stuff but I don't really know what to write here yet. Also text about why this is important?? like nutrients and stuff???</div>
 	</div>
 	<div id = "pot">
-		<svg id = "testSvg" width = "400" height = "400">
-			<image y = "140" xlink:href = "icon/pot.svg"></image>
+		<svg id = "testSvg" width = "400" height = "350">
+			<image y = "90" xlink:href = "icon/pot.svg"></image>
 		</svg>
 		<form>
 			<input type ='text' id = 'search-box'></input>
@@ -198,10 +215,12 @@
             }
         });
 
+        d3.select("#recipesContainer").append("div").attr("id", "outer-recipe-box");
         for (var i = 0; i < 10; i++){
-        	d3.select("#recipesContainer").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
-        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
+        	d3.select("#outer-recipe-box").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
+        	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("class", "titles").attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
 			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
+			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
         	for (var j = 0; j <10; j++){
         		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j);
         	}
@@ -271,6 +290,8 @@
 			            		document.getElementById("#ingredients"+ i + ", " + j).innerHTML = ing_list[j];
 			            	}
 			            }
+						document.getElementById("ingredientsTitle"+i).innerHTML = recipe_name + "<span class = 'backbtn' onclick = 'toggleInstruction("+'"#ingredientsContainer'+i+'")'+"'>Back</span>";
+						console.log(recipe_name + "<span onclick = 'toggleInstruction("+'"#ingredientsContainer"'+i+'")'+">Back</span>");
 		        	}
 			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
 			        if (scales.length == 0){
@@ -343,7 +364,7 @@
 	function fadeIn(element){
 		svg = d3.select("#testSvg");
 		svg.append("image")
-				.attr("x", Math.random() * 300 + 50)
+				.attr("x", Math.random() * 200 + 100)
 				.attr("y", 0)
 				.attr("height", 50)
 				.attr("width", 50)
@@ -355,7 +376,7 @@
 	function fadeInText(element){
 		svg = d3.select("#testSvg");
 		svg.append("text")
-				.attr("x", Math.random() * 300 + 50)
+				.attr("x", Math.random() * 200 + 100)
 				.attr("y", 0)
 				.text(element)
 				.attr("class", "fade fall")
@@ -363,15 +384,22 @@
 	}
 	
 	function toggleInstruction(element){
+		var titles = document.getElementsByClassName("titles");
 		if (d3.select(element).style("display") == "none"){
 			if (!instructionsActive){
 				d3.select(element).style("display", "block");
 				instructionsActive = true;
+				for (var i = 0; i < titles.length; i++){
+					titles[i].style.display = "none";
+				}
 			}
 		}
 		else {
 			d3.select(element).style("display", "none");
 			instructionsActive = false;
+				for (var i = 0; i < titles.length; i++){
+					titles[i].style.display = "block";
+				}
 		}
 	}
 </script>

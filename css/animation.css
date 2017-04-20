@@ -1,26 +1,26 @@
 @-webkit-keyframes fadeIn {
   from { opacity: 0; transform: translate(0px, 0px);} 
-  to { opacity: 1; transform: translate(0px, 220px);}}
+  to { opacity: 1; transform: translate(0px, 170px);}}
 }
 @-moz-keyframes fadeIn {
   from { opacity: 0; transform: translate(0px, 0px);} 
-  to { opacity: 1; transform: translate(0px, 220px);}}
+  to { opacity: 1; transform: translate(0px, 170px);}}
 }
 @keyframes fadeIn { 
   from { opacity: 0; transform: translate(0px, 0px);} 
-  to { opacity: 1; transform: translate(0px, 220px);}}
+  to { opacity: 1; transform: translate(0px, 170px);}}
 }
 @-webkit-keyframes moveDown {
   from { transform: translate(0px, 0px);} 
-  to { transform: translate(0px, 220px);}
+  to { transform: translate(0px, 170px);}
 }
 @-moz-keyframes moveDown {
   from { transform: translate(0px, 0px);} 
-  to { transform: translate(0px, 220px);}
+  to { transform: translate(0px, 170px);}
 }
 @keyframes moveDown { 
   from { transform: translate(0px, 0px);} 
-  to { transform: translate(0px, 220px);}
+  to { transform: translate(0px, 170px);}
 }
 .fade {
 	opacity: 0;transform: translate(0px, 0px);
