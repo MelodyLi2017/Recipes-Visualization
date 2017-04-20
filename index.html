@@ -348,10 +348,10 @@
 	function fadeIn(element){
 		svg = d3.select("#testSvg");
 		svg.append("image")
-				.attr("x", Math.random() * 200 + 100)
+				.attr("x", Math.round(Math.random()) * 175 + 125)
 				.attr("y", 0)
-				.attr("height", 50)
-				.attr("width", 50)
+				//.attr("height", 100)
+				.attr("width", 90)
 				.attr("class", "fade fall")
 				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
@@ -360,7 +360,7 @@
 	function fadeInText(element){
 		svg = d3.select("#testSvg");
 		svg.append("text")
-				.attr("x", Math.random() * 200 + 100)
+				.attr("x", Math.round(Math.random()) * 175 + 125)
 				.attr("y", 0)
 				.text(element)
 				.attr("class", "fade fall")
