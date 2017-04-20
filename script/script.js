@@ -11,7 +11,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
     console.log(recipe_ing);
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
     'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
-    // var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Carbohydrt', 'Protein'];
+    var serving = ['kcal', 'g', 'mg', 'g', 'g', 'g', 'g', 'mg', 'mg', 'mg', 'mg'];
     //{ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}
     var ing_full = recipe_ing[recipe];
     var calories = recipe_cal[recipe]['calories'];
@@ -77,7 +77,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
                 .attr("stroke", color);
                 agg_x += scales[i](tot_nutrients);
                 if (i == 0){
-                     agg_nutrients+=amount_recipe*amount_per;
+                     agg_nutrients=calories;
                 }
                 else{
                     agg_nutrients+=amount_recipe*amount_per*ratio;
@@ -97,7 +97,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
         }
     d3.select("#text")
     .append("text")
-    .text("Total: "+ Math.trunc(agg_nutrients))
+    .text("Total: "+ Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
     .attr("class", "totals")
     .attr("text-anchor", "end")
     .attr("x", 750)

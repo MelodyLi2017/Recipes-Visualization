@@ -231,32 +231,23 @@
 		});
 
         d3.select("#recipesContainer").append("div").attr("id", "outer-recipe-box");
-        for (var i = 0; i < 10; i++){
+        for (var i = 0; i < 100; i++){
         	d3.select("#outer-recipe-box").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("class", "titles").attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
-			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
+			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredient").attr("id", "ingredientsContainer" + i).style("display", "none");
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
-			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "instructions");
+			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "ingredient");
         	for (var j = 0; j <10; j++){
         		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j).attr("class", "ingredient");
         	}
-        	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "instructions");
+        	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "ingredient");
         }
 
         var slow_write = _.debounce( function(term){
+        	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br><br>	";
         	prev_search = term.trim();
         	if (term.trim()==''){
-        		document.getElementById("recipe-list").innerHTML = "You searched for:  <br>";
-        		for (var i = 0; i < 10; i++){
-			        document.getElementById("recipe-name"+i).innerHTML = '';
-		            for (var j = 0; j < 10; j++){
-		               	d3.select("#ingredients"+ i + ", " + j).text('');
-		            }
-	        	}
-	        	search_count = 0;
-	        	d3.selectAll("rect").remove();
-	        	d3.selectAll(".axis").remove();
-	        	d3.selectAll("text").remove();
+        		clear_everything();
 	       	}
         	else{
 	        	search_count += 1;
@@ -273,25 +264,17 @@
 			    	return inputArray.indexOf(item) == index;
 			    });
 			    if (arr.length == 0){
-			    	document.getElementById("recipe-list").innerHTML = "You searched for: "+term+"  <br>";
 			    	clear_everything();
 		        	document.getElementById("errorMessage").innerHTML = term + " was not found. Please try again.";
 			    }
 			    else{
-			    	document.getElementById("recipe-list").innerHTML = "You searched for: " + term + " <br><br>	";
-			        if (arr.length < 10){
-			        	list_num = arr.length;
-			        }
-			        else {
-			        	list_num = 10;
-			        }
-			        for (var i = 0; i < list_num; i++){
+			        for (var i = 0; i < Math.min(arr.length, 100); i++){
 			            var recipe_name = arr[i];
 			            if (recipe_info[recipe_name]!=null){
 					        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
 					        console.log(recipe_name);
-					        document.getElementById("description" + i).innerHTML = recipe_info[recipe_name]['description'];
-					        document.getElementById("instructions0").innerHTML = recipe_info[recipe_name]['instructions'][0]+"<br><br>"
+					        document.getElementById("description" + i).innerHTML = "Description: <br>" + recipe_info[recipe_name]['description'];
+					        document.getElementById("instructions" + i).innerHTML = "Instructions: <br>" + recipe_info[recipe_name]['instructions'][0]+"<br><br>"
 					        for ( var j = 1; j < recipe_info[recipe_name]['instructions'].length; j++){
 								 document.getElementById("instructions" + i).innerHTML += recipe_info[recipe_name]['instructions'][j]+"<br><br>";				        	
 					        }
@@ -412,7 +395,6 @@
 	function clear_everything(){
 		d3.selectAll('.titles').text("");
     	d3.selectAll('.ingredient').text("");
-    	d3.selectAll(".instructions").text("");
     	d3.select(".ing_title").text("")
 		
     	d3.selectAll("rect").remove();
