@@ -330,8 +330,8 @@
 		var calories = caloriesCalculator(1, bmr);
 		var macro = macronutrientCalculator(1, calories);
 		var tmp = [3,6,1];
-		d3.select("#recommendLines0").attr("x1", scales[0](macro[0])+100);
-		d3.select("#recommendLines0").attr("x2", scales[0](macro[0])+100);
+		d3.select("#recommendLines0").attr("x1", scales[0](calories)+100);
+		d3.select("#recommendLines0").attr("x2", scales[0](calories)+100);
 		for (var i = 1; i < macro.length; i++)
 		{
 			console.log(scales[tmp[i]](macro[i]));
