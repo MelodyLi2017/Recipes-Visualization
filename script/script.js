@@ -95,7 +95,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         .text("Total: "+ Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
         .attr("class", "totals")
         .attr("text-anchor", "end")
-        .attr("x", 750)
+        .attr("x", 550)
         .attr("y", 90+i*60);
 
         d3.select("#bars")
@@ -174,7 +174,7 @@ function create_axis (scales, domain){
     var axes = [];
     for (i = 0; i < domain.length; i++){
         console.log(domain.length);
-        scale = d3.scaleLinear().domain(domain[i]).range([0, 550]);
+        scale = d3.scaleLinear().domain(domain[i]).range([0, 400]);
         scales.push(scale);
         var axis = d3.axisTop(scale);
         var y_coord = i*60 + 63;
