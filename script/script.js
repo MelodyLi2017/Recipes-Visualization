@@ -62,10 +62,12 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
                     // console.log("tot_nutrients: " + tot_nutrients);
                 }
                 // console.log(nutrition_array[i]);
+                var class_name = ing.slice(6);
+                class_name = class_name.replace(/\W/g, '');
                 d3.select("#bars")
                 .append("rect")
-                .attr("class",ing)
-                .attr("id", "bar"+i +", " + j)
+                .attr("class", class_name)
+                .attr("id", "bar"+i + ", " + j)
                 .attr("x", agg_x + 100)
                 .attr("y", 75+ i*60)
                 .attr("height", 20)

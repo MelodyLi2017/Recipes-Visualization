@@ -177,6 +177,7 @@
     var svg = d3.select("#barGraph");
 	var instructionsActive = false;
 	var search_count = 0;
+	var clickedElements = [];
 
 	d3.queue()
 	//load recipe data from epicurious.com
@@ -239,7 +240,22 @@
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
 			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "description");
         	for (var j = 0; j <10; j++){
-        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + ", " + j).attr("class", "ingredient");
+        		d3.select("#ingredientsContainer"+i).append("p").attr("id", "#ingredients"+ i + "-" + j).attr("class", "ingredient")
+        		.on("click", function(){
+        			var l = this.id.charAt(this.id.length-1);
+        			d3.select(this.id).attr("font-weight", "bold");
+        			var class_name = this.innerHTML.slice(6);
+	                class_name = class_name.replace(/\W/g, '');
+        			if (clickedElements[this.id]==null || clickedElements[this.id] =="off"){
+        				clickedElements[this.id]="on";
+	        			d3.selectAll("."+class_name).attr("fill", color_scale[l]).attr("stroke", color_scale[l]);
+        			}
+        			else{
+        				clickedElements[this.id]="off";
+        				d3.selectAll("."+class_name).attr("fill", "#3E59B3").attr("stroke", "#3E59B3");
+        				d3.select(this.id).attr("font-weight", "bold");
+        			}
+        		});
         	}
         	d3.select("#ingredientsContainer"+i).append("p").attr("id", "instructions"+i).attr("class", "description");
         }
@@ -288,22 +304,14 @@
 					        }
 				            for (var j = 0; j < list_max; j++){
 				            	if (ing_list[j].trim() !=''){
-				            		document.getElementById("#ingredients"+ i + ", " + j).innerHTML = ing_list[j];
+				            		document.getElementById("#ingredients"+ i + "-" + j).innerHTML = ing_list[j];
 				            	}
 				            }
 						}
 						document.getElementById("ingredientsTitle"+i).innerHTML = recipe_name + "<span class = 'backbtn' onclick = 'toggleInstruction("+'"#ingredientsContainer'+i+'")'+"'>Back</span>";
 						document.getElementById("errorMessage").innerHTML = '';
 		        	}
-			        //var domain = findMax(results[0]['item'], recipe_ing, ing_nut, [2500, 30, 81, 160]);       		
-			        if (document.getElementsByClassName("axis").length == 0){
-			        	//create_axis(scales);
-						create_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales);
-			        }
-			        else{
-			        	update_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales);
-			        }
-			        //return arr; 
+					//create_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales); 
 			    }
 		    } 
 		    getIcon(term);  
@@ -396,10 +404,5 @@
      	document.getElementsByClassName('ingredient').innerHTML=' ';
      	document.getElementsByClassName('description').innerHTML=' ';
     	d3.select(".ing_title").text(" ");
-		
-    	d3.selectAll("rect").remove();
-    	d3.selectAll(".axis").remove();
-    	d3.selectAll(".graph-text").remove();
-    	d3.selectAll(".totals").remove();
 	}
 </script>
