@@ -189,15 +189,11 @@
 	});
 
 	d3.queue()
-	//load recipe data from epicurious.com
-	//load nutrition data from usda
     .defer(d3.json, "data/recipe_to_nutrition_final.json")
     .defer(d3.json, "data/nutrition_reduced.json")
     .defer(d3.json, "data/full_format_recipes.json")
     .await(function (error, file1, file2, file3) {
-    	console.log(file3);
         console.log(error);
-        //{recipe: {ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}, recipe2...}
         recipe_ing = {};
         recipe_info = {};
         recipe_search_list = [];
@@ -219,12 +215,8 @@
             	recipe_search_list.push({'title': title, 'ingredients': Object.keys(file1[i][title])});
             }
         }
-        //console.log(recipe_search_list);
         ing_nut = file2;
         scales = [];
-
-        //at some point, prevent enter pressing/make it call search function
-
         var options = {keys:['ingredients'], id: 'title'};
 		var fuse = new Fuse (recipe_search_list, options);
 
@@ -279,7 +271,6 @@
 	        	search_count += 1;
 			    fuse.search(" "+term);
 				var results = fuse.results;
-				console.log(results);
 				var new_results = [];
 				for (i = 0; i <results.length; i++){
 					if (results[i]['score'] < .30){
@@ -298,7 +289,6 @@
 			            var recipe_name = arr[i];
 			            if (recipe_info[recipe_name]!=null){
 					        document.getElementById("recipe-name"+i).innerHTML = recipe_name;
-					        console.log(recipe_name);
 					        document.getElementById("description" + i).innerHTML = "Description: <br>" + recipe_info[recipe_name]['description'];
 					        document.getElementById("instructions" + i).innerHTML = "Instructions: <br>" + recipe_info[recipe_name]['instructions'][0]+"<br><br>"
 					        for ( var j = 1; j < recipe_info[recipe_name]['instructions'].length; j++){
@@ -320,7 +310,6 @@
 						document.getElementById("ingredientsTitle"+i).innerHTML = recipe_name + "<span class = 'backbtn' onclick = 'toggleInstruction("+'"#ingredientsContainer'+i+'")'+"'>Back</span>";
 						document.getElementById("errorMessage").innerHTML = '';
 		        	}
-					//create_graph(results[0]['item'], recipe_ing, recipe_info, ing_nut, scales); 
 			    }
 		    } 
 		    getIcon(term);  

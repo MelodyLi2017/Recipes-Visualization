@@ -82,7 +82,6 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
            agg_nutrients = calories;
 
         }
-        console.log(domain[0][i] + tot_nutrients);
         d3.select("#text")
         .append("text")
         .text(Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
@@ -100,10 +99,12 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         .attr("stroke", "#49006a")
         .attr("stroke-width", 2);
     }
+
+
     d3.select("#text")
     .append("text")
     .text("Recommended Daily Value*")
-    .attr("x", scales[0](recommend[0]))
+    .attr("x", recommend[i])
     .attr("y", 40)
     .attr("text-anchor", "middle")
     .attr("class", "graph-text")
@@ -178,7 +179,6 @@ function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
 function create_axis (scales, domain){
     var axes = [];
     for (i = 0; i < domain.length; i++){
-        console.log(domain.length);
         scale = d3.scaleLinear().domain(domain[i]).range([0, 400]);
         scales.push(scale);
         var axis = d3.axisTop(scale);
