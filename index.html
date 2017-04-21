@@ -181,6 +181,13 @@
 	var search_count = 0;
 	var clickedElements = [];
 
+	$(document).keypress(
+    function(event){
+     if (event.which == '13') {
+        event.preventDefault();
+      }
+	});
+
 	d3.queue()
 	//load recipe data from epicurious.com
 	//load nutrition data from usda
