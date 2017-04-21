@@ -92,7 +92,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         console.log(domain[0][i] + tot_nutrients);
         d3.select("#text")
         .append("text")
-        .text("Total: "+ Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
+        .text(Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
         .attr("class", "totals")
         .attr("text-anchor", "end")
         .attr("x", 550)
@@ -101,10 +101,10 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         d3.select("#bars")
         .append("line")
         .attr("x1", scales[i](recommend[i]))
-        .attr("y1", 70+i*60)
+        .attr("y1", 60+i*60)
         .attr("x2", scales[i](recommend[i]))
         .attr("y2", 100+i*60)
-        .attr("stroke", "yellow")
+        .attr("stroke", "#49006a")
         .attr("stroke-width", 3);
     }
 }
