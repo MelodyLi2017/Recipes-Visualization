@@ -1,6 +1,7 @@
 function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
     var recommend = [2000, 65, 300, 300, 25, 50, 50, 1000, 18, 5000, 60];
     var scales = []
+    d3.selectAll("line").remove();
     d3.selectAll("rect").remove();
     d3.selectAll(".axis").remove();
     d3.selectAll(".graph-text").remove();
@@ -87,14 +88,15 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         .text(Math.trunc(agg_nutrients)+" " +serving[i]+" per serving")
         .attr("class", "totals")
         .attr("text-anchor", "end")
-        .attr("x", 550)
+        .attr("x", 600)
         .attr("y", 90+i*60);
 
+        console.log(nutrition_array[i] + recommend[i] + "," + scales[i](recommend[i]));
         d3.select("#bars")
         .append("line")
-        .attr("x1", scales[i](recommend[i]))
+        .attr("x1", 115+ scales[i](recommend[i]))
         .attr("y1", 60+i*60)
-        .attr("x2", scales[i](recommend[i]))
+        .attr("x2", 115 + scales[i](recommend[i]))
         .attr("y2", 100+i*60)
         .attr("stroke", "#49006a")
         .attr("stroke-width", 2);
@@ -104,7 +106,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
     d3.select("#text")
     .append("text")
     .text("Recommended Daily Value*")
-    .attr("x", recommend[i])
+    .attr("x", 115+ recommend[0])
     .attr("y", 40)
     .attr("text-anchor", "middle")
     .attr("class", "graph-text")

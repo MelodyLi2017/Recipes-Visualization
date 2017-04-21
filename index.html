@@ -129,27 +129,7 @@
 		<form>
 			<input type ='text' id = 'search-box'></input>
 		</form>
-		<div id  = "personalInfo">
-			<form>
-				<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
-				<h2>Macronutrient Calculator</h2>
-				<div class = "labels">
-					Gender:<br>
-					Weight(Lbs):</br>
-					Height(Inches):</br>
-					Age(Years):<br>
-				</div>
-				<div class = "inputs">
-					<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
-					<input type = "radio"  name = "gender" value = "1">Female<br>
-					<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
-					<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
-					<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
-				</div>
-				<input type = "submit" value = "Calculate->" id = "submit">
-			</form>
-		</div>
-<div id = "error"><p id = "errorMessage"></p></div>
+	<div id = "error"><p id = "errorMessage"></p></div>
 	</div>
 	<div id = "data">
 		<div id = "recipesContainer">
@@ -315,33 +295,6 @@
 		    getIcon(term);  
 		}, 700);  
     });
-
-	/* Macronutrient Calculator */
-	function BMRCalculator(gender, weight, height, age){
-		//gender: 0 = male, 1 = female
-		if (gender == 1)
-			return 655.1 + (4.35 * weight) + (4.7 * height) - (4.7 * age);
-		else
-			return 66 + (6.2 * weight) + (12.7 * height) - (6.76 * age);
-	}
-	
-	function caloriesCalculator(exercise, BMR){
-		return BMR * (1.2 + exercise * 0.175);
-	}
-	
-	function macronutrientCalculator(ratio, calories){
-		//ratio = 0, body building ratio 50-30-20 (carb-protein-fat)
-		//ratio = 1, maintenance ratio 40-30-30
-		//ratio = 2, fat loss ratio 20-35-45
-		if (ratio == 0)
-			return [calories * .5 / 4, calories * .3 / 4, calories * .2 / 9];
-		else if (ratio == 1)
-			return [calories * .4 / 4, calories * .3 / 4, calories * .3 / 9];
-		else if (ratio == 2)
-			return [calories * .2 / 4, calories * .35 / 4, calories * .45 / 9];
-		else
-			return [281, 112.5, 75];
-	}
 	
 	/* Animation/Interface Functions */
 	function getIcon(ingredient){
