@@ -386,10 +386,9 @@
 		svg = d3.select("#testSvg");
 		d3.select(".fade").remove();
 		svg.append("image")
-				.attr("x", Math.round(Math.random()) * 175 + 125)
+				.attr("x", 180)
 				.attr("y", 0)
-				//.attr("height", 100)
-				.attr("width", 90)
+				.attr("height", 125)
 				.attr("class", "fade fall")
 				.attr("id", element)
 				.attr("xlink:href", "./icon/" + element + ".svg");
@@ -399,7 +398,7 @@
 		svg = d3.select("#testSvg");
 		d3.select(".fade").remove();
 		svg.append("text")
-				.attr("x", Math.round(Math.random()) * 175 + 125)
+				.attr("x", 200)
 				.attr("y", 0)
 				.text(element)
 				.attr("class", "fade fall")

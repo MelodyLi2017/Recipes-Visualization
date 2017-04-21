@@ -115,7 +115,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
 
     d3.select("#text")
     .append("text")
-    .text("*Recommended Daily Value numbers are based on the 2,000 calorie diet.")
+    .text("*Recommended Daily Value numbers for micronutrients are static and based on the 2,000 calorie diet")
     .attr("x", 0)
     .attr("y", 720)
     .attr("font-size", 10)
