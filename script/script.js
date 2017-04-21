@@ -1,4 +1,5 @@
 function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
+    var recommend = [2000, 65, 300, 300, 25, 50, 50, 1000, 18, 5000, 60];
     var scales = []
     d3.selectAll("rect").remove();
     d3.selectAll(".axis").remove();
@@ -82,9 +83,6 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
                     agg_nutrients+=amount_recipe*amount_per*ratio;
                 }
             }
-            if (j== (max-1)) {
-                // console.log(nutrition_array[i]+": "+ agg_nutrients);
-            }
         }
         if (i == 0){
            ratio = calories/agg_nutrients;
@@ -99,12 +97,16 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         .attr("text-anchor", "end")
         .attr("x", 750)
         .attr("y", 90+i*60);
-    }
-}
 
-function update_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales){
-    d3.selectAll("rect").remove();
-    create_graph(recipe, recipe_ing, recipe_cal, ing_nut, scales);
+        d3.select("#bars")
+        .append("line")
+        .attr("x1", scales[i](recommend[i]))
+        .attr("y1", 70+i*60)
+        .attr("x2", scales[i](recommend[i]))
+        .attr("y2", 100+i*60)
+        .attr("stroke", "yellow")
+        .attr("stroke-width", 3);
+    }
 }
 
 function findMax(recipe, recipe_ing, ing_nut, recipe_cal){

@@ -385,7 +385,7 @@
 			if (!instructionsActive){
 				d3.select(element).style("display", "block");
 				instructionsActive = true;
-				update_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_info, ing_nut, scales);
+				create_graph(titles[element.substring(element.length-1)].innerText + " ",recipe_ing, recipe_info, ing_nut, scales);
 				for (var i = 0; i < titles.length; i++){
 					titles[i].style.display = "none";
 				}
