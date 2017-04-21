@@ -105,8 +105,24 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         .attr("x2", scales[i](recommend[i]))
         .attr("y2", 100+i*60)
         .attr("stroke", "#49006a")
-        .attr("stroke-width", 3);
+        .attr("stroke-width", 2);
     }
+    d3.select("#text")
+    .append("text")
+    .text("Recommended Daily Value*")
+    .attr("x", scales[0](recommend[0]))
+    .attr("y", 40)
+    .attr("text-anchor", "middle")
+    .attr("class", "graph-text")
+    .attr("font-size", 10);
+
+    d3.select("#text")
+    .append("text")
+    .text("*Recommended Daily Value numbers are based on the 2,000 calorie diet.")
+    .attr("x", 0)
+    .attr("y", 720)
+    .attr("font-size", 10)
+    .attr("class", "graph-text");
 }
 
 function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
