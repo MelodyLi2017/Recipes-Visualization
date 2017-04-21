@@ -130,7 +130,7 @@
 			<input type ='text' id = 'search-box'></input>
 		</form>
 		<div id  = "personalInfo">
-			<form>
+			<form name = "macronutrient">
 				<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
 				<h2>Macronutrient Calculator</h2>
 				<div class = "labels">
@@ -140,13 +140,12 @@
 					Age(Years):<br>
 				</div>
 				<div class = "inputs">
-					<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
+					<input type = "radio" name = "gender" value = "0"  checked = "true" onclick = "updateRecommendValue()">Male 
 					<input type = "radio"  name = "gender" value = "1">Female<br>
-					<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
-					<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
-					<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
+					<input type = "range" min = "0" max = "400" value = "150" name = "weight" onchange = "updateRecommendValue()"><span id = "weightVal">150</span><br>
+					<input type = "range" min = "0" max = "100" value = "70" name = "height" onchange = "updateRecommendValue()"><span id = "heightVal">70</span><br>
+					<input type = "range" min = "0" max = "200" value = "30" name = "age" onchange = "updateRecommendValue()"><span id = "ageVal">30</span><br>
 				</div>
-				<input type = "submit" value = "Calculate->" id = "submit">
 			</form>
 		</div>
 <div id = "error"><p id = "errorMessage"></p></div>
@@ -315,6 +314,63 @@
 		    getIcon(term);  
 		}, 700);  
     });
+	
+	var rad = document.macronutrient.gender;
+	var height = document.macronutrient.height;
+	var weight = document.macronutrient.weight;
+	var age = document.macronutrient.age;
+	
+	function updateRecommendValue(){
+		rad = document.macronutrient.gender;
+		height = document.macronutrient.height;
+		weight = document.macronutrient.weight;
+		age = document.macronutrient.age;
+		var bmr = BMRCalculator(rad.value, weight.value, height.value, age.value);
+		console.log(bmr);
+		var calories = caloriesCalculator(1, bmr);
+		var macro = macronutrientCalculator(1, calories);
+		var tmp = [3,6,1];
+		d3.select("#recommendLines0").attr("x1", scales[0](macro[0])+100);
+		d3.select("#recommendLines0").attr("x2", scales[0](macro[0])+100);
+		for (var i = 1; i < macro.length; i++)
+		{
+			console.log(scales[tmp[i]](macro[i]));
+			console.log(macro);
+			d3.select("#recommendLines"+tmp[i]).attr("x1", scales[tmp[i]](macro[i])+100);
+			d3.select("#recommendLines"+tmp[i]).attr("x2", scales[tmp[i]](macro[i])+100);
+		}
+		document.getElementById("weightVal").innerHTML = weight.value;
+		document.getElementById("heightVal").innerHTML = height.value;
+		document.getElementById("ageVal").innerHTML = age.value;
+		
+	}
+	
+	/* Macronutrient Calculator */
+	function BMRCalculator(gender, weight, height, age){
+		//gender: 0 = male, 1 = female
+		if (gender == 1)
+			return 655.1 + (4.35 * weight) + (4.7 * height) - (4.7 * age);
+		else
+			return 66 + (6.2 * weight) + (12.7 * height) - (6.76 * age);
+	}
+	
+	function caloriesCalculator(exercise, BMR){
+		return BMR * (1.2 + exercise * 0.175);
+	}
+	
+	function macronutrientCalculator(ratio, calories){
+		//ratio = 0, body building ratio 50-30-20 (carb-protein-fat)
+		//ratio = 1, maintenance ratio 40-30-30
+		//ratio = 2, fat loss ratio 20-35-45
+		if (ratio == 0)
+			return [calories * .5 / 4, calories * .3 / 5.5, calories * .2 / 9];
+		else if (ratio == 1)
+			return [calories * .4 / 4, calories * .3 / 5.5, calories * .3 / 9];
+		else if (ratio == 2)
+			return [calories * .2 / 4, calories * .35 /5.5, calories * .45 / 9];
+		else
+			return [281, 112.5, 75];
+	}
 	
 	/* Animation/Interface Functions */
 	function getIcon(ingredient){

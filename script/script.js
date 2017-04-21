@@ -1,6 +1,6 @@
-function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
+function create_graph (recipe, recipe_ing, recipe_cal, ing_nut, scales){
     var recommend = [2000, 65, 300, 300, 25, 50, 50, 1000, 18, 5000, 60];
-    var scales = []
+    //var scales = []
     d3.selectAll("line").remove();
     d3.selectAll("rect").remove();
     d3.selectAll(".axis").remove();
@@ -94,6 +94,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
         console.log(nutrition_array[i] + recommend[i] + "," + scales[i](recommend[i]));
         d3.select("#bars")
         .append("line")
+		.attr("id", "recommendLines"+i)
         .attr("x1", 115+ scales[i](recommend[i]))
         .attr("y1", 60+i*60)
         .attr("x2", 115 + scales[i](recommend[i]))
@@ -122,7 +123,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
 }
 
 function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
-	max = [[0,2000]];
+	max = [[0,2500]];
     recommend = [2000, 65, 300, 300, 25, 50, 50, 1000, 18, 5000, 60];
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
     'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
