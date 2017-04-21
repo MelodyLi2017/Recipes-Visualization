@@ -129,7 +129,27 @@
 		<form>
 			<input type ='text' id = 'search-box'></input>
 		</form>
-	<div id = "error"><p id = "errorMessage"></p></div>
+		<div id  = "personalInfo">
+			<form>
+				<!-- unable to include other for gender as I have no idea how to calculate BMI for other genders-->
+				<h2>Macronutrient Calculator</h2>
+				<div class = "labels">
+					Gender:<br>
+					Weight(Lbs):</br>
+					Height(Inches):</br>
+					Age(Years):<br>
+				</div>
+				<div class = "inputs">
+					<input type = "radio" name = "gender" value = "0"  checked = "true">Male 
+					<input type = "radio"  name = "gender" value = "1">Female<br>
+					<input type = "range" min = "0" max = "400" value = "150" name = "weight"><br>
+					<input type = "range" min = "0" max = "100" value = "70" name = "height"><br>
+					<input type = "range" min = "0" max = "200" value = "30" name = "age"><br>
+				</div>
+				<input type = "submit" value = "Calculate->" id = "submit">
+			</form>
+		</div>
+<div id = "error"><p id = "errorMessage"></p></div>
 	</div>
 	<div id = "data">
 		<div id = "recipesContainer">
