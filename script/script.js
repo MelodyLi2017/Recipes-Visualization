@@ -10,7 +10,6 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
     var nutrition_array = ['Energ_Kcal', 'Lipid_Tot', 'Cholestrl', 'Carbohydrt',
     'Fiber_TD', 'Sugar_Tot', 'Protein', 'Calcium', 'Iron', 'Vit_A', 'Vit_C'];
     var serving = ['kcal', 'g', 'mg', 'g', 'g', 'g', 'g', 'mg', 'mg', 'mg', 'mg'];
-    //{ing1:{NDBNo:#, magnitude:#, unit: 'gram'}, ing2: {NDBNo:#, magnitude:#, unit: 'gram'}}
     var ing_full = recipe_ing[recipe];
     var calories = recipe_cal[recipe]['calories'];
     var ratio = 0;
@@ -30,7 +29,6 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
-                //console.log(ing_nut[NDBNo]['Shrt_Desc']);
                 if (ing_full[ing]['unit']=="NA"){
                     if (ing.indexOf(" egg") != -1){
                          var amount_recipe = 1;
@@ -57,12 +55,7 @@ function create_graph (recipe, recipe_ing, recipe_cal, ing_nut){
                 else{
                     var tot_nutrients = amount_recipe*amount_per*ratio;
                     var color = color_scale[j];
-                    //console.log(ing + ": " + nutrition_array[i] + amount_per);
-                    // console.log(ing + ": "+ amount_recipe);
-                    // console.log(ratio);
-                    // console.log("tot_nutrients: " + tot_nutrients);
                 }
-                // console.log(nutrition_array[i]);
                 var class_name = ing.slice(6);
                 class_name = class_name.replace(/\W/g, '');
                 d3.select("#bars")
@@ -140,7 +133,6 @@ function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
             var NDBNo = ing_full[ing]['NDBNo'];
             if (ing_nut[NDBNo]!=null){
                 var amount_per = Number(ing_nut[NDBNo][nutrition_array[i]]);
-                //console.log(ing_nut[NDBNo]['Shrt_Desc']);
                 if (ing_full[ing]['unit']=="NA"){
                     if (ing.indexOf(" egg") != -1){
                          var amount_recipe = 1;
@@ -172,8 +164,6 @@ function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
             var ratio = recipe_cal[recipe]['calories']/agg_x;
         }
         else{
-            // console.log(agg_x);
-            // console.log("recommended: " + recommend[i]);
     		if (agg_x > recommend[i]){
     			max.push([0, agg_x*1.2]);
             }
@@ -182,7 +172,6 @@ function findMax(recipe, recipe_ing, ing_nut, recipe_cal){
             }
         }
     }
-    // console.log(max);
 	return max;
 }
 
