@@ -239,7 +239,7 @@
         for (var i = 0; i < 100; i++){
         	d3.select("#outer-recipe-box").append("div").attr("class", "recipe-box").attr("id", "recipe-name-box"+i);
         	d3.select("#recipe-name-box"+i).append("p").attr("id", "recipe-name"+i).attr("class", "titles").attr("onclick", "toggleInstruction('#ingredientsContainer"+i+"')");	
-			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredient").attr("id", "ingredientsContainer" + i).style("display", "none");
+			d3.select("#recipe-name-box"+i).append("div").attr("class", "ingredients").attr("id", "ingredientsContainer" + i).style("display", "none");
 			d3.select("#ingredientsContainer"+i).append("div").attr("id", "ingredientsTitle" + i).attr("class", "ing_title");
 			d3.select("#ingredientsContainer"+i).append("p").attr("id", "description"+i).attr("class", "description");
         	for (var j = 0; j <10; j++){
