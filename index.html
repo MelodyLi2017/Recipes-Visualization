@@ -256,10 +256,12 @@
 	                class_name = class_name.replace(/\W/g, '');
         			if (clickedElements[this.id]==null || clickedElements[this.id] =="off"){
         				clickedElements[this.id]="on";
+						this.style.color = color_scale[l];
 	        			d3.selectAll("."+class_name).attr("fill", color_scale[l]).attr("stroke", color_scale[l]);
         			}
         			else{
         				clickedElements[this.id]="off";
+						this.style.color = "brown";
         				d3.selectAll("."+class_name).attr("fill", "#3E59B3").attr("stroke", "#3E59B3");
         			}
         		});
